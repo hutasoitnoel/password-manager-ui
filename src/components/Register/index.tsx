@@ -1,29 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik';
-import Axios from 'axios';
-import { BASE_URL } from '../../config';
+import { ENDPOINT } from '../../config';
+import { post } from '../../helper/axiosHelper';
 
 
 const Register = () => {
     const navigate = useNavigate();
 
-    const [form, setForm] = useState({
-        username: "",
-        password: ""
-    });
-
-    const onSubmit = async (values: object, actions: object) => {
-        console.log({ values, actions });
-        console.log('ini form');
-
+    const onSubmit = async (values: object) => {
         try {
-            await Axios.post(`${BASE_URL}/register`, values);
-
+            await post(ENDPOINT.REGISTER, values)
             navigate("/login")
         } catch (err: any) {
-            console.log('fail login');
-
             console.log(err.response);
         }
     }
@@ -31,7 +20,10 @@ const Register = () => {
     return <div>
         <h1>Register</h1>
         <Formik
-            initialValues={form}
+            initialValues={{
+                username: "",
+                password: ""
+            }}
             onSubmit={onSubmit}
         >
             <Form>
