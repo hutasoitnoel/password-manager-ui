@@ -6,9 +6,15 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { CARD_MODE, ENDPOINT, INITIAL_EDIT_FORM } from '../../config';
+import Toast from 'react-bootstrap/Toast';
+import { CARD_MODE, ENDPOINT, INITIAL_EDIT_FORM, TOAST_ICON } from '../../config';
 import { get, patch, axiosDelete, post } from '../../helper/axiosHelper';
 import { Credential } from './types';
+
+import errorIcon from '../../icons/error.svg'
+import successIcon from '../../icons/success.svg'
+
+import './styles.css'
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -19,6 +25,11 @@ const Dashboard = () => {
     const [activeCardMode, setActiveCardMode] = useState("");
     const [activeCardIndex, setActiveCardIndex] = useState<Number>();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState({
+        icon: '',
+        text: ''
+    });
 
     useEffect(() => {
         checkAuthentication()
@@ -78,8 +89,11 @@ const Dashboard = () => {
             const response = await patch(`passwords/${credentials[index].ID}`, editForm);
 
             credentials[index] = response.data;
+
+            showSuccessToast("Credential edited!")
         } catch (err) {
             console.log(err);
+            showErrorToast("Error deleting credential")
         }
 
         setActiveCardMode("");
@@ -89,20 +103,38 @@ const Dashboard = () => {
         try {
             await axiosDelete(`passwords/${credentials[index].ID}`);
             await fetchCredentials();
+            showSuccessToast("Credential deleted!")
         } catch (err) {
             console.log(err);
+            showErrorToast("Error deleting credential")
         }
 
         setActiveCardMode("");
     }
 
-    const onConfirmCreate = async () => {
-        console.log(editForm);
+    const showErrorToast = (text: string) => {
+        setToastMessage({
+            icon: TOAST_ICON.ERROR,
+            text
+        })
+        setShowToast(true)
+    };
 
+    const showSuccessToast = (text: string) => {
+        setToastMessage({
+            icon: TOAST_ICON.SUCCESS,
+            text
+        })
+        setShowToast(true)
+    }
+
+    const onConfirmCreate = async () => {
         try {
             await post('passwords', editForm)
+            showSuccessToast("New credential created!")
         } catch (err) {
             console.log(err);
+            showErrorToast("Error creating credential")
         }
 
         setIsCreateModalOpen(false)
@@ -117,10 +149,21 @@ const Dashboard = () => {
     const onOpenCreateCredentialModal = () => {
         setIsCreateModalOpen(true)
         setEditForm(INITIAL_EDIT_FORM)
-
     }
 
     return <div className='container my-5'>
+        <Toast
+            show={showToast}
+            onClose={() => setShowToast(false)}
+            className='toast-position'
+            delay={3000}
+            autohide
+        >
+            <Toast.Body>
+                <img src={toastMessage.icon === TOAST_ICON.ERROR ? errorIcon : successIcon} className="rounded me-2" alt="toast-icon" height={15} />
+                <strong className="me-auto">{toastMessage.text}</strong>
+            </Toast.Body>
+        </Toast>
         <p>DASHBOARD</p>
         <Button onClick={onOpenCreateCredentialModal}>
             Create credential

@@ -19,3 +19,8 @@ export const INITIAL_EDIT_FORM = {
     username: "",
     password: ""
 }
+
+export const TOAST_ICON = {
+    SUCCESS: 'success',
+    ERROR: 'error'
+}
