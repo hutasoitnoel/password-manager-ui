@@ -6,3 +6,8 @@ export const ENDPOINT = {
     REGISTER: 'register',
     PASSWORDS: 'passwords'
 }
+
+export const CARD_MODE = {
+    EDIT: 'EDIT',
+    DELETE: 'DELETE'
+}

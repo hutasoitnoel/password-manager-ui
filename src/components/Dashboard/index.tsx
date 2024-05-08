@@ -5,23 +5,24 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import { ENDPOINT } from '../../config';
-import { get } from '../../helper/axiosHelper';
+import { CARD_MODE, ENDPOINT } from '../../config';
+import { get, patch, axiosDelete } from '../../helper/axiosHelper';
 import { Credential } from './types';
 
 const Dashboard = () => {
     const navigate = useNavigate();
 
-    const [cardMode, setCardMode] = useState(""); // VIEW, EDIT, DELETE
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [credentials, setCredentials] = useState<Credential[]>([]);
-    const [editModeIndex, setEditModeIndex] = useState<Number>();
     const [editForm, setEditForm] = useState<Credential>({
+        ID: 0,
         website_name: "",
         website_url: "",
         username: "",
         password: ""
     });
+    const [activeCardMode, setActiveCardMode] = useState("");
+    const [activeCardIndex, setActiveCardIndex] = useState<Number>();
 
     useEffect(() => {
         checkAuthentication()
@@ -34,7 +35,6 @@ const Dashboard = () => {
     }, [isAuthenticated])
 
     const onChangeInputText = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value);
         setEditForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
@@ -48,8 +48,6 @@ const Dashboard = () => {
                 setIsAuthenticated(true)
             }
         } catch (err: any) {
-            console.log('failed auth check');
-            console.log(err.response);
             navigate("/login");
         }
     }
@@ -64,51 +62,81 @@ const Dashboard = () => {
         }
     }
 
-    const onClickDelete = () => {
-
+    const onClickDelete = (index: number) => {
+        setActiveCardMode(CARD_MODE.DELETE);
+        setActiveCardIndex(index);
     }
 
     const onClickEdit = (index: number) => {
-        setEditModeIndex(index)
+        setActiveCardMode(CARD_MODE.EDIT);
+        setActiveCardIndex(index);
+        setEditForm(credentials[index]);
+    }
+
+    const onClickCancel = () => {
+        setActiveCardMode("");
+    }
+
+    const onClickConfirmEdit = async (index: number) => {
+        try {
+            const response = await patch(`passwords/${credentials[index].ID}`, editForm);
+
+            credentials[index] = response.data;
+        } catch (err) {
+            console.log(err);
+        }
+
+        setActiveCardMode("");
+    }
+
+    const onClickConfirmDelete = async (index: number) => {
+        try {
+            await axiosDelete(`passwords/${credentials[index].ID}`);
+            await fetchCredentials();
+        } catch (err) {
+            console.log(err);
+        }
+
+        setActiveCardMode("");
     }
 
     return <div className='container my-5'>
         <Row >
             {credentials.map((credential, index) => {
-                const isEditMode = index === editModeIndex;
+                const isActiveCard = index === activeCardIndex;
 
                 return <Col className='col-3 my-3' key={index}>
                     <Card className='card-style'>
                         <Card.Body>
                             {
-                                isEditMode ?
+                                isActiveCard && activeCardMode === CARD_MODE.EDIT ?
                                     <Form>
                                         <Form.Group className="mb-3">
                                             <Form.Label>Website name</Form.Label>
                                             <Form.Control
                                                 type="text"
-                                                value={credential.website_name}
+                                                value={editForm.website_name}
                                                 onChange={onChangeInputText}
                                                 name='website_name'
                                             />
                                             <Form.Label>Website URL</Form.Label>
                                             <Form.Control
                                                 type="text"
-                                                value={credential.website_url}
+                                                value={editForm.website_url}
                                                 onChange={onChangeInputText}
                                                 name='website_url'
                                             />
                                             <Form.Label>Username</Form.Label>
                                             <Form.Control
                                                 type="text"
-                                                value={credential.username}
+                                                value={editForm.username}
                                                 onChange={onChangeInputText}
                                                 name='username'
                                             />
                                             <Form.Label>Password</Form.Label>
                                             <Form.Control
                                                 type="text"
-                                                value={credential.password}
+                                                value={editForm.password}
                                                 onChange={onChangeInputText}
                                                 name='password'
                                             />
@@ -125,10 +153,24 @@ const Dashboard = () => {
                                         <Card.Text>{credential.password}</Card.Text>
                                     </>
                             }
-                            <div className='d-flex justify-content-between'>
-                                <Button onClick={onClickDelete} variant='danger'>Delete</Button>
-                                <Button onClick={() => onClickEdit(index)} variant='info'>Edit</Button>
-                            </div>
+                            {
+                                isActiveCard && activeCardMode === CARD_MODE.EDIT ?
+                                    <div className='d-flex justify-content-between'>
+                                        <Button onClick={onClickCancel} variant='danger'>Cancel</Button>
+                                        <Button onClick={() => onClickConfirmEdit(index)} variant='info'>Confirm</Button>
+                                    </div>
+                                    :
+                                    isActiveCard && activeCardMode === CARD_MODE.DELETE ?
+                                        <div className='d-flex justify-content-between'>
+                                            <Button onClick={onClickCancel} variant='info'>Cancel</Button>
+                                            <Button onClick={() => onClickConfirmDelete(index)} variant='danger'>Delete</Button>
+                                        </div>
+                                        :
+                                        <div className='d-flex justify-content-between'>
+                                            <Button onClick={() => onClickDelete(index)} variant='danger'>Delete</Button>
+                                            <Button onClick={() => onClickEdit(index)} variant='info'>Edit</Button>
+                                        </div>
+                            }
                         </Card.Body>
                     </Card>
                 </Col>

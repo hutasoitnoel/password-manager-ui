@@ -12,3 +12,7 @@ export const post = async (endpoint: string, payload: object): Promise<AxiosResp
 export const patch = async (endpoint: string, payload: object): Promise<AxiosResponse> => {
     return await axios.patch(`${BASE_URL}/${endpoint}`, payload, { withCredentials: true });
 }
+
+export const axiosDelete = async (endpoint: string): Promise<AxiosResponse> => {
+    return await axios.delete(`${BASE_URL}/${endpoint}`, { withCredentials: true });
+}
