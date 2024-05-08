@@ -11,3 +11,11 @@ export const CARD_MODE = {
     EDIT: 'EDIT',
     DELETE: 'DELETE'
 }
+
+export const INITIAL_EDIT_FORM = {
+    ID: 0,
+    website_name: "",
+    website_url: "",
+    username: "",
+    password: ""
+}

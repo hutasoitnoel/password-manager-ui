@@ -5,8 +5,9 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import { CARD_MODE, ENDPOINT } from '../../config';
-import { get, patch, axiosDelete } from '../../helper/axiosHelper';
+import Modal from 'react-bootstrap/Modal';
+import { CARD_MODE, ENDPOINT, INITIAL_EDIT_FORM } from '../../config';
+import { get, patch, axiosDelete, post } from '../../helper/axiosHelper';
 import { Credential } from './types';
 
 const Dashboard = () => {
@@ -14,15 +15,10 @@ const Dashboard = () => {
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [credentials, setCredentials] = useState<Credential[]>([]);
-    const [editForm, setEditForm] = useState<Credential>({
-        ID: 0,
-        website_name: "",
-        website_url: "",
-        username: "",
-        password: ""
-    });
+    const [editForm, setEditForm] = useState<Credential>(INITIAL_EDIT_FORM);
     const [activeCardMode, setActiveCardMode] = useState("");
     const [activeCardIndex, setActiveCardIndex] = useState<Number>();
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
     useEffect(() => {
         checkAuthentication()
@@ -100,7 +96,75 @@ const Dashboard = () => {
         setActiveCardMode("");
     }
 
+    const onConfirmCreate = async () => {
+        console.log(editForm);
+
+        try {
+            await post('passwords', editForm)
+        } catch (err) {
+            console.log(err);
+        }
+
+        setIsCreateModalOpen(false)
+        fetchCredentials()
+    }
+
+    const onCancelCreateCredentialModal = () => {
+        setIsCreateModalOpen(false)
+        setEditForm(INITIAL_EDIT_FORM)
+    }
+
+    const onOpenCreateCredentialModal = () => {
+        setIsCreateModalOpen(true)
+        setEditForm(INITIAL_EDIT_FORM)
+
+    }
+
     return <div className='container my-5'>
+        <p>DASHBOARD</p>
+        <Button onClick={onOpenCreateCredentialModal}>
+            Create credential
+        </Button>
+        <Modal
+            show={isCreateModalOpen}>
+            <div className='p-3'>
+                <p>Create credential</p>
+                <Form.Group className="mb-3">
+                    <Form.Label>Website name</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={editForm.website_name}
+                        onChange={onChangeInputText}
+                        name='website_name'
+                    />
+                    <Form.Label>Website URL</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={editForm.website_url}
+                        onChange={onChangeInputText}
+                        name='website_url'
+                    />
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={editForm.username}
+                        onChange={onChangeInputText}
+                        name='username'
+                    />
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={editForm.password}
+                        onChange={onChangeInputText}
+                        name='password'
+                    />
+                </Form.Group>
+                <div className='d-flex justify-content-between'>
+                    <Button variant='info' onClick={onCancelCreateCredentialModal}>Cancel</Button>
+                    <Button variant='primary' onClick={onConfirmCreate}>Confirm</Button>
+                </div>
+            </div>
+        </Modal>
         <Row >
             {credentials.map((credential, index) => {
                 const isActiveCard = index === activeCardIndex;
@@ -110,7 +174,7 @@ const Dashboard = () => {
                         <Card.Body>
                             {
                                 isActiveCard && activeCardMode === CARD_MODE.EDIT ?
-                                    <Form>
+                                    <>
                                         <Form.Group className="mb-3">
                                             <Form.Label>Website name</Form.Label>
                                             <Form.Control
@@ -141,7 +205,7 @@ const Dashboard = () => {
                                                 name='password'
                                             />
                                         </Form.Group>
-                                    </Form>
+                                    </>
                                     : <>
                                         <Card.Text>Website name</Card.Text>
                                         <Card.Text>{credential.website_name}</Card.Text>
