@@ -39,10 +39,7 @@ const Dashboard = () => {
             <Tab eventKey="credentials" title="Credentials" />
             <Tab eventKey="finances" title="Finances" />
         </Tabs>
-        {
-            activeTab === 'credentials' && <Credentials />
-        }
-
+        {activeTab === 'credentials' && <Credentials />}
     </div>
 };
 
