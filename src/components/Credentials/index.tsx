@@ -3,27 +3,20 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { CARD_MODE, ENDPOINT, INITIAL_EDIT_FORM, TOAST_ICON } from '../../config';
+import CredentialForm from './components/credentialForm';
+import { CARD_MODE, ENDPOINT, FIELD_LABEL_MAPPER, INITIAL_CREDENTIAL_FORM, TOAST_ICON, credentialFormFields } from '../../config';
 import { get, patch, axiosDelete, post } from '../../helper/axiosHelper';
 import CommonToast from '../CommonToast';
+import { Credential, CredentialFormType } from './types';
 
 import './styles.css'
-
-interface Credential {
-    ID: number,
-    website_name: string,
-    website_url: string,
-    username: string,
-    password: string
-}
 
 const Credentials = () => {
     const [activeCardMode, setActiveCardMode] = useState("");
     const [activeCardIndex, setActiveCardIndex] = useState<Number>();
     const [credentials, setCredentials] = useState<Credential[]>([]);
-    const [editForm, setEditForm] = useState<Credential>(INITIAL_EDIT_FORM);
+    const [form, setForm] = useState<CredentialFormType>(INITIAL_CREDENTIAL_FORM);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState({
@@ -36,7 +29,7 @@ const Credentials = () => {
     }, [])
 
     const onChangeInputText = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
     const onClickDelete = (index: number) => {
@@ -47,7 +40,7 @@ const Credentials = () => {
     const onClickEdit = (index: number) => {
         setActiveCardMode(CARD_MODE.EDIT);
         setActiveCardIndex(index);
-        setEditForm(credentials[index]);
+        setForm(credentials[index]);
     }
 
     const onClickCancel = () => {
@@ -56,7 +49,7 @@ const Credentials = () => {
 
     const onClickConfirmEdit = async (index: number) => {
         try {
-            const response = await patch(`passwords/${credentials[index].ID}`, editForm);
+            const response = await patch(`passwords/${credentials[index].ID}`, form);
 
             credentials[index] = response.data;
 
@@ -111,7 +104,7 @@ const Credentials = () => {
 
     const onConfirmCreate = async () => {
         try {
-            await post('passwords', editForm)
+            await post('passwords', form)
             showSuccessToast("New credential created!")
         } catch (err) {
             console.log(err);
@@ -124,14 +117,22 @@ const Credentials = () => {
 
     const onCancelCreateCredentialModal = () => {
         setIsCreateModalOpen(false)
-        setEditForm(INITIAL_EDIT_FORM)
+        setForm(INITIAL_CREDENTIAL_FORM)
     }
 
     const onOpenCreateCredentialModal = () => {
         setIsCreateModalOpen(true)
-        setEditForm(INITIAL_EDIT_FORM)
+        setForm(INITIAL_CREDENTIAL_FORM)
     }
 
+    const displayCredential = (credential: Credential) => {
+        return credentialFormFields.map(field => {
+            return <>
+            <Card.Text>{FIELD_LABEL_MAPPER[field]}</Card.Text>
+            <Card.Text>{credential[field]}</Card.Text>
+            </>
+        })
+    }
 
     return <>
         <Button onClick={onOpenCreateCredentialModal}>
@@ -146,48 +147,11 @@ const Credentials = () => {
                         <Card.Body>
                             {
                                 isActiveCard && activeCardMode === CARD_MODE.EDIT ?
-                                    <>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label>Website name</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                value={editForm.website_name}
-                                                onChange={onChangeInputText}
-                                                name='website_name'
-                                            />
-                                            <Form.Label>Website URL</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                value={editForm.website_url}
-                                                onChange={onChangeInputText}
-                                                name='website_url'
-                                            />
-                                            <Form.Label>Username</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                value={editForm.username}
-                                                onChange={onChangeInputText}
-                                                name='username'
-                                            />
-                                            <Form.Label>Password</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                value={editForm.password}
-                                                onChange={onChangeInputText}
-                                                name='password'
-                                            />
-                                        </Form.Group>
-                                    </>
-                                    : <>
-                                        <Card.Text>Website name</Card.Text>
-                                        <Card.Text>{credential.website_name}</Card.Text>
-                                        <Card.Text>Website URL</Card.Text>
-                                        <Card.Text>{credential.website_url}</Card.Text>
-                                        <Card.Text>Username</Card.Text>
-                                        <Card.Text>{credential.username}</Card.Text>
-                                        <Card.Text>Password</Card.Text>
-                                        <Card.Text>{credential.password}</Card.Text>
-                                    </>
+                                    <CredentialForm
+                                        form={form}
+                                        onChange={onChangeInputText}
+                                    />
+                                    : displayCredential(credential)
                             }
                             {
                                 isActiveCard && activeCardMode === CARD_MODE.EDIT ?
@@ -212,7 +176,7 @@ const Credentials = () => {
                 </Col>
             })}
         </Row>
-        <CommonToast 
+        <CommonToast
             show={showToast}
             onClose={() => setShowToast(false)}
             icon={toastMessage.icon}
@@ -221,36 +185,10 @@ const Credentials = () => {
         <Modal
             show={isCreateModalOpen}>
             <div className='p-3'>
-                <Form.Group className="mb-3">
-                    <Form.Label>Website name</Form.Label>
-                    <Form.Control
-                        type="text"
-                        value={editForm.website_name}
-                        onChange={onChangeInputText}
-                        name='website_name'
-                    />
-                    <Form.Label>Website URL</Form.Label>
-                    <Form.Control
-                        type="text"
-                        value={editForm.website_url}
-                        onChange={onChangeInputText}
-                        name='website_url'
-                    />
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        type="text"
-                        value={editForm.username}
-                        onChange={onChangeInputText}
-                        name='username'
-                    />
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type="text"
-                        value={editForm.password}
-                        onChange={onChangeInputText}
-                        name='password'
-                    />
-                </Form.Group>
+                <CredentialForm
+                    form={form}
+                    onChange={onChangeInputText}
+                />
                 <div className='d-flex justify-content-between'>
                     <Button variant='info' onClick={onCancelCreateCredentialModal}>Cancel</Button>
                     <Button variant='primary' onClick={onConfirmCreate}>Confirm</Button>
