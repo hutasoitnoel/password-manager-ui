@@ -1,5 +1,5 @@
 import React from 'react';
-import Form from 'react-bootstrap/form'
+import Form from 'react-bootstrap/Form'
 import { CredentialFormType } from '../types';
 import { FIELD_LABEL_MAPPER, credentialFormFields } from '../../../config';
 
