@@ -17,7 +17,9 @@ jobs:
         run: npm install
 
       - name: Build
-        run: CI=false npm run build
+        run: |
+          export REACT_APP_PASSWORD_MANAGER_SERVICE_BASE_URL=${{ secrets.APP_URL }}
+          CI=false npm run build
 
       - name: Push to build branch
         uses: s0/git-publish-subdir-action@develop
@@ -37,6 +39,3 @@ jobs:
           script: |
             cd builds/password-manager-ui
             git pull
-            rm .env
-            echo "REACT_APP_PASSWORD_MANAGER_SERVICE_BASE_URL=${{ secrets.APP_URL }}" >> .env
-            ls
