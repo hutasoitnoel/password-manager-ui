@@ -37,5 +37,7 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            kill $(ps aux | grep 'serve -s' | grep -v grep | awk '{print $2}')
             cd builds/password-manager-ui
             git pull
+            serve -s &
