@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { ENDPOINT } from '../../config';
 import { get } from '../../helper/axiosHelper';
 import Credentials from '../Credentials';
+import Button from 'react-bootstrap/Button';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -42,6 +44,12 @@ const Dashboard = () => {
             <Tab eventKey="credit" title="Credit" />
         </Tabs>
         {activeTab === 'credentials' && <Credentials />}
+        <Button 
+        onClick={() => {
+            Cookies.remove('Authorization')
+            window.location.reload()
+        }}
+        >Logout</Button>
     </div>
 };
 
