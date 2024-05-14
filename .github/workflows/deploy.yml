@@ -40,4 +40,4 @@ jobs:
             kill $(ps aux | grep 'serve -s' | grep -v grep | awk '{print $2}')
             cd builds/password-manager-ui
             git pull
-            serve -s &
+            nohup serve -s >/dev/null 2>&1 &
