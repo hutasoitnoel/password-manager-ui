@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
@@ -7,23 +8,19 @@ import Modal from 'react-bootstrap/Modal';
 import CredentialForm from './components/credentialForm';
 import { CARD_MODE, ENDPOINT, FIELD_LABEL_MAPPER, INITIAL_CREDENTIAL_FORM, TOAST_ICON, credentialFormFields } from '../../config';
 import { get, patch, axiosDelete, post } from '../../helper/axiosHelper';
-import CommonToast from '../CommonToast';
 import { Credential, CredentialFormType } from './types';
 
 import './styles.css'
+import { showToast } from '../../features/toast/toastSlice';
 
 const Credentials = () => {
+    const dispatch = useDispatch()
+
     const [activeCardMode, setActiveCardMode] = useState("");
     const [activeCardIndex, setActiveCardIndex] = useState<Number>();
     const [credentials, setCredentials] = useState<Credential[]>([]);
     const [form, setForm] = useState<CredentialFormType>(INITIAL_CREDENTIAL_FORM);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState({
-        icon: '',
-        text: ''
-    });
-
     useEffect(() => {
         fetchCredentials()
     }, [])
@@ -87,19 +84,11 @@ const Credentials = () => {
     }
 
     const showErrorToast = (text: string) => {
-        setToastMessage({
-            icon: TOAST_ICON.ERROR,
-            text
-        })
-        setShowToast(true)
+        dispatch(showToast({ icon: TOAST_ICON.ERROR, text }))
     };
 
     const showSuccessToast = (text: string) => {
-        setToastMessage({
-            icon: TOAST_ICON.SUCCESS,
-            text
-        })
-        setShowToast(true)
+        dispatch(showToast({ icon: TOAST_ICON.SUCCESS, text }))
     }
 
     const onConfirmCreate = async () => {
@@ -128,8 +117,8 @@ const Credentials = () => {
     const displayCredential = (credential: Credential) => {
         return credentialFormFields.map(field => {
             return <>
-            <Card.Text>{FIELD_LABEL_MAPPER[field]}</Card.Text>
-            <Card.Text>{credential[field]}</Card.Text>
+                <Card.Text>{FIELD_LABEL_MAPPER[field]}</Card.Text>
+                <Card.Text>{credential[field]}</Card.Text>
             </>
         })
     }
@@ -176,12 +165,6 @@ const Credentials = () => {
                 </Col>
             })}
         </Row>
-        <CommonToast
-            show={showToast}
-            onClose={() => setShowToast(false)}
-            icon={toastMessage.icon}
-            text={toastMessage.text}
-        />
         <Modal
             show={isCreateModalOpen}>
             <div className='p-3'>

@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { ENDPOINT } from '../../config';
-import { get, post } from '../../helper/axiosHelper';
-import Credentials from '../Credentials';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { showToast } from '../../features/toast/toastSlice'
+import { ENDPOINT, TOAST_ICON } from '../../config';
+import { get, post } from '../../helper/axiosHelper';
+import Credentials from '../Credentials';
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [activeTab, setActiveTab] = useState("credentials");
 
@@ -27,6 +30,16 @@ const Dashboard = () => {
             }
         } catch (err: any) {
             navigate("/login");
+        }
+    }
+
+    const onClickLogout = async () => {
+        try {
+            await post(ENDPOINT.LOGOUT, {})
+            dispatch(showToast({ icon: TOAST_ICON.SUCCESS, text: 'Bye!' }))
+            checkAuthentication()
+        } catch (err) {
+            dispatch(showToast({ icon: TOAST_ICON.ERROR, text: 'Logout failed' }))
         }
     }
 
@@ -50,11 +63,10 @@ const Dashboard = () => {
             <Col md={1}>
                 <Button
                     variant='danger'
-                    onClick={async () => {
-                        await post(ENDPOINT.LOGOUT, {})
-                        checkAuthentication()
-                    }}
-                >Logout</Button>
+                    onClick={onClickLogout}
+                >
+                    Logout
+                </Button>
             </Col>
 
         </Row>

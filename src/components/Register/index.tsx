@@ -1,19 +1,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik';
+import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button'
-import { ENDPOINT } from '../../config';
+import { showToast } from '../../features/toast/toastSlice'
+import { ENDPOINT, TOAST_ICON } from '../../config';
 import { post } from '../../helper/axiosHelper';
 import './styles.css';
 
 const Register = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const onSubmit = async (values: object) => {
         try {
             await post(ENDPOINT.REGISTER, values)
+            dispatch(showToast({ icon: TOAST_ICON.SUCCESS, text: 'New account registered! Please login' }))
             navigate("/login")
         } catch (err: any) {
+            dispatch(showToast({ icon: TOAST_ICON.ERROR, text: 'Registration failed' }))
             console.log(err.response);
         }
     }

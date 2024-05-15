@@ -2,19 +2,23 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import Button from 'react-bootstrap/Button';
-import { ENDPOINT } from '../../config';
+import { useDispatch } from 'react-redux';
+import { showToast } from '../../features/toast/toastSlice'
+import { ENDPOINT, TOAST_ICON } from '../../config';
 import { post } from '../../helper/axiosHelper';
 import './styles.css'
 
 const Login = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const onSubmit = async (values: object) => {
         try {
             await post(ENDPOINT.LOGIN, values)
+            dispatch(showToast({ icon: TOAST_ICON.SUCCESS, text: 'Successfully logged in!' }))
             navigate("/")
         } catch (err: any) {
-            console.log(err.response);
+            dispatch(showToast({ icon: TOAST_ICON.ERROR, text: 'Login failed' }))
         }
     }
 
