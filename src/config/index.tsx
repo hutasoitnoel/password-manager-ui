@@ -5,6 +5,7 @@ export const BASE_URL: string = process.env.REACT_APP_PASSWORD_MANAGER_SERVICE_B
 export const ENDPOINT = {
     CHECK_AUTHORIZATION: 'check-auth',
     LOGIN: 'login',
+    LOGOUT: 'logout',
     REGISTER: 'register',
     PASSWORDS: 'passwords'
 }

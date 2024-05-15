@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { ENDPOINT } from '../../config';
-import { get } from '../../helper/axiosHelper';
+import { get, post } from '../../helper/axiosHelper';
 import Credentials from '../Credentials';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -30,26 +31,36 @@ const Dashboard = () => {
     }
 
     return <div className='container my-5'>
-        <Tabs
-            defaultActiveKey="credentials"
-            id="uncontrolled-tab-example"
-            className="mb-3"
-            onSelect={(eventKey: string | null) => {
-                if (eventKey) setActiveTab(eventKey);
-            }}
-        >
-            <Tab eventKey="credentials" title="Credentials" />
-            <Tab eventKey="investments" title="Investments" />
-            <Tab eventKey="debt" title="Debt" />
-            <Tab eventKey="credit" title="Credit" />
-        </Tabs>
+        <Row>
+            <Col md={11}>
+                <Tabs
+                    defaultActiveKey="credentials"
+                    id="uncontrolled-tab-example"
+                    className="mb-3"
+                    onSelect={(eventKey: string | null) => {
+                        if (eventKey) setActiveTab(eventKey);
+                    }}
+                >
+                    <Tab eventKey="credentials" title="Credentials" />
+                    <Tab eventKey="investments" title="Investments" />
+                    <Tab eventKey="debt" title="Debt" />
+                    <Tab eventKey="credit" title="Credit" />
+                </Tabs>
+            </Col>
+            <Col md={1}>
+                <Button
+                    variant='danger'
+                    onClick={async () => {
+                        await post(ENDPOINT.LOGOUT, {})
+                        checkAuthentication()
+                    }}
+                >Logout</Button>
+            </Col>
+
+        </Row>
+
+
         {activeTab === 'credentials' && <Credentials />}
-        <Button 
-        onClick={() => {
-            Cookies.remove('Authorization')
-            window.location.reload()
-        }}
-        >Logout</Button>
     </div>
 };
 
