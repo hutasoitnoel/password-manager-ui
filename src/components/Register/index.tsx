@@ -1,9 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik';
+import Button from 'react-bootstrap/Button'
 import { ENDPOINT } from '../../config';
 import { post } from '../../helper/axiosHelper';
-
+import './styles.css';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -17,8 +18,8 @@ const Register = () => {
         }
     }
 
-    return <div>
-        <h1>Register</h1>
+    return <div className='container my-3'>
+        <h2>Register</h2>
         <Formik
             initialValues={{
                 username: "",
@@ -26,12 +27,19 @@ const Register = () => {
             }}
             onSubmit={onSubmit}
         >
-            <Form>
+            <Form className='register-form'>
                 <label>Username</label>
-                <Field name="username" placeholder="Username" />
+                <Field name="username" />
                 <label>Password</label>
-                <Field name="password" placeholder="Password" />
-                <button type="submit">Submit</button>
+                <Field name="password" />
+                <Button
+                    size='sm'
+                    className='my-2'
+                    type='submit'
+                    variant='info'
+                >
+                    Submit
+                </Button>
             </Form>
         </Formik>
     </div>
