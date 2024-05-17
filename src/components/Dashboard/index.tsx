@@ -12,7 +12,7 @@ import { get, post } from '../../helper/axiosHelper';
 import Credentials from '../Credentials';
 
 import credentialIcon from '../../icons/credential.png';
-import financeIcon from '../../icons/finance.png'
+import savingsIcon from '../../icons/savings.png'
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -63,20 +63,21 @@ const Dashboard = () => {
                         <Tab>
                             <div className='d-flex align-items-center'>
                                 <Image
-                                    src={financeIcon}
+                                    src={savingsIcon}
                                     height={15}
                                 />
                                 <p className='m-0'>
-                                    Finance
+                                    Savings
                                 </p>
-                            </div></Tab>
+                            </div>
+                        </Tab>
                     </TabList>
 
                     <TabPanel>
                         <Credentials />
                     </TabPanel>
                     <TabPanel>
-                        Finance
+                        Savings
                     </TabPanel>
                 </Tabs>
             </Col>
