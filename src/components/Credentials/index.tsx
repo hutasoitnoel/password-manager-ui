@@ -5,13 +5,14 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
+import Image from 'react-bootstrap/Image';
 import CredentialForm from './components/credentialForm';
-import { CARD_MODE, ENDPOINT, FIELD_LABEL_MAPPER, INITIAL_CREDENTIAL_FORM, TOAST_ICON, credentialFormFields } from '../../config';
+import { CARD_MODE, ENDPOINT, FIELD_LABEL_MAPPER, INITIAL_CREDENTIAL_FORM, TOAST_ICON } from '../../config';
+import { showToast } from '../../features/toast/toastSlice';
 import { get, patch, axiosDelete, post } from '../../helper/axiosHelper';
 import { Credential, CredentialFormType } from './types';
 
 import './styles.css'
-import { showToast } from '../../features/toast/toastSlice';
 
 const Credentials = () => {
     const dispatch = useDispatch()
@@ -20,10 +21,36 @@ const Credentials = () => {
     const [activeCardIndex, setActiveCardIndex] = useState<Number>();
     const [credentials, setCredentials] = useState<Credential[]>([]);
     const [form, setForm] = useState<CredentialFormType>(INITIAL_CREDENTIAL_FORM);
+    const [logos, setLogos] = useState<{ [key: string]: string }>({});
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+
     useEffect(() => {
         fetchCredentials()
     }, [])
+
+    useEffect(() => {
+        fetchLogos()
+    }, [credentials])
+
+    const fetchLogos = async () => {
+        const promise = credentials.map(async ({ website_name }) => {
+            const response = await get(ENDPOINT.WEBSITE_LOGO, { name: website_name })
+            const { image } = response.data
+            return { website_name, image }
+        })
+
+        const logoArr = await Promise.all(promise)
+
+        let result: { [key: string]: string } = {}
+
+        logoArr.forEach(({ website_name, image }) => {
+            if (!result[website_name]) {
+                result[website_name] = image
+            }
+        })
+
+        setLogos(result)
+    }
 
     const onChangeInputText = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -116,7 +143,11 @@ const Credentials = () => {
 
     const displayCredential = (credential: Credential) => (
         <>
-            <Card.Header>
+            <Card.Header className='d-flex align-items-center'>
+                <Image
+                    src={logos[credential.website_name]}
+                    className='card-website-logo'
+                />
                 <Card.Text>{credential.website_name}</Card.Text>
             </Card.Header>
             <Card.Body>

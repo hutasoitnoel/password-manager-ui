@@ -7,3 +7,9 @@ export interface Credential {
 }
 
 export type CredentialFormType = Omit<Credential, 'ID'>;
+
+export interface Logo {
+    name: string,
+    ticker: string,
+    image: string
+}
