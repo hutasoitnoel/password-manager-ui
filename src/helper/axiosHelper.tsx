@@ -1,8 +1,18 @@
 import axios, { AxiosResponse } from 'axios';
 import { BASE_URL } from '../config';
+import _ from 'lodash';
 
-export const get = async (endpoint: string): Promise<AxiosResponse> => {
-    return await axios.get(`${BASE_URL}/${endpoint}`, { withCredentials: true });
+export const get = async (endpoint: string, query?: object): Promise<AxiosResponse> => {
+    let url = `${BASE_URL}/${endpoint}`
+    
+    if (!_.isEmpty(query)) {
+        url += '?'
+        for (const [key, value] of Object.entries(query)) {
+            url += `${key}=${value}&`
+        }
+    }
+
+    return await axios.get(url, { withCredentials: true });
 }
 
 export const post = async (endpoint: string, payload: object): Promise<AxiosResponse> => {
