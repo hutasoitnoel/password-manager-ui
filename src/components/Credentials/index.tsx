@@ -114,14 +114,33 @@ const Credentials = () => {
         setForm(INITIAL_CREDENTIAL_FORM)
     }
 
-    const displayCredential = (credential: Credential) => {
-        return credentialFormFields.map(field => {
-            return <>
-                <Card.Text>{FIELD_LABEL_MAPPER[field]}</Card.Text>
-                <Card.Text>{credential[field]}</Card.Text>
-            </>
-        })
-    }
+    const displayCredential = (credential: Credential) => (
+        <>
+            <Card.Header>
+                <Card.Text>{credential.website_name}</Card.Text>
+            </Card.Header>
+            <Card.Body>
+                <Card.Text className='mb-1'>
+                    <strong>
+                        {FIELD_LABEL_MAPPER.website_url}
+                    </strong>
+                </Card.Text>
+                <Card.Text>{credential.website_url}</Card.Text>
+                <Card.Text className='mb-1'>
+                    <strong>
+                        {FIELD_LABEL_MAPPER.username}
+                    </strong>
+                </Card.Text>
+                <Card.Text>{credential.username}</Card.Text>
+                <Card.Text className='mb-1'>
+                    <strong>
+                        {FIELD_LABEL_MAPPER.password}
+                    </strong>
+                </Card.Text>
+                <Card.Text>{credential.password}</Card.Text>
+            </Card.Body>
+        </>
+    )
 
     return <>
         <Button onClick={onOpenCreateCredentialModal}>
@@ -133,15 +152,17 @@ const Credentials = () => {
 
                 return <Col className='col-3 my-3' key={index}>
                     <Card className='card-style'>
-                        <Card.Body>
-                            {
-                                isActiveCard && activeCardMode === CARD_MODE.EDIT ?
+                        {
+                            isActiveCard && activeCardMode === CARD_MODE.EDIT ?
+                                <Card.Body>
                                     <CredentialForm
                                         form={form}
                                         onChange={onChangeInputText}
                                     />
-                                    : displayCredential(credential)
-                            }
+                                </Card.Body>
+                                : displayCredential(credential)
+                        }
+                        <Card.Footer>
                             {
                                 isActiveCard && activeCardMode === CARD_MODE.EDIT ?
                                     <div className='d-flex justify-content-between'>
@@ -160,7 +181,7 @@ const Credentials = () => {
                                             <Button onClick={() => onClickEdit(index)} variant='info'>Edit</Button>
                                         </div>
                             }
-                        </Card.Body>
+                        </Card.Footer>
                     </Card>
                 </Col>
             })}

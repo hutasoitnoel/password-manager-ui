@@ -7,7 +7,8 @@ export const ENDPOINT = {
     LOGIN: 'login',
     LOGOUT: 'logout',
     REGISTER: 'register',
-    PASSWORDS: 'passwords'
+    PASSWORDS: 'passwords',
+    WEBSITE_NAME: 'website-name'
 }
 
 export const CARD_MODE = {

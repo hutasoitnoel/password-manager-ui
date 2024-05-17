@@ -15,7 +15,7 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
     return <Form.Group className="mb-3">
         {
             credentialFormFields.map((field) => <>
-                <Form.Label>
+                <Form.Label className='mb-1'>
                     <strong>
                         {FIELD_LABEL_MAPPER[field]}
                     </strong>
@@ -25,6 +25,7 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
                     value={form[field]}
                     onChange={onChange}
                     name={field}
+                    className='mb-3'
                 />
             </>
             )
