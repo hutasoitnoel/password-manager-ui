@@ -10,6 +10,7 @@ import { showToast } from '../../features/toast/toastSlice'
 import { ENDPOINT, TOAST_ICON } from '../../config';
 import { get, post } from '../../helper/axiosHelper';
 import Credentials from '../Credentials';
+import Savings from '../Savings';
 
 import credentialIcon from '../../icons/credential.png';
 import savingsIcon from '../../icons/savings.png'
@@ -77,7 +78,7 @@ const Dashboard = () => {
                         <Credentials />
                     </TabPanel>
                     <TabPanel>
-                        Savings
+                        <Savings />
                     </TabPanel>
                 </Tabs>
             </Col>
