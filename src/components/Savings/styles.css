@@ -1,0 +1,10 @@
+.chart-style {
+    height: 500px;
+}
+
+.divider {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid black;
+}

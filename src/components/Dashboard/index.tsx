@@ -68,7 +68,7 @@ const Dashboard = () => {
                                     height={15}
                                 />
                                 <p className='m-0'>
-                                    Savings
+                                    Savings (Beta)
                                 </p>
                             </div>
                         </Tab>
