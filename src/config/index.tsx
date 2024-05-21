@@ -42,3 +42,11 @@ export const FIELD_LABEL_MAPPER: CredentialFormType = {
     username: 'Username',
     password: 'Password'
 }
+
+export const SAVING_COLOR_MAPPER = {
+    BCA: '#1164B2',
+    Bibit: '#1164B2',
+    Pluang: '#4B44FE',
+    Stockbit: '#343434',
+    Koinworks: '#A1333B'
+}

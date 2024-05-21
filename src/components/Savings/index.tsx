@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col'
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { get } from '../../helper/axiosHelper'
 import { ENDPOINT } from '../../config';
+import { generateChartData } from '../../helper/generateChartData';
 import './styles.css';
 
 // Register necessary chart components
@@ -13,8 +14,9 @@ const Savings: React.FC = () => {
     const chartContainer = useRef<HTMLCanvasElement>(null);
     const chartInstance = useRef<Chart<'pie'> | null>(null);
     const [savings, setSavings] = useState([]);
-    const [chartData, setChartData] = useState<{ names: string[], amounts: number[] }>({ names: [], amounts: [] });
+    const [chartData, setChartData] = useState<{ names: string[], amounts: number[], colors: string[] }>({ names: [], amounts: [], colors: [] });
     const [activeSaving, setActiveSaving] = useState("");
+    const [details, setDetails] = useState([]);
 
     useEffect(() => {
         fetchSavings()
@@ -33,34 +35,27 @@ const Savings: React.FC = () => {
         };
     }, [chartData]);
 
+    useEffect(() => {
+        fetchDetails()
+    }, [activeSaving])
+
+    const fetchDetails = () => {
+        const data = savings.filter(({ name }) => name === activeSaving)
+
+        setDetails(data)
+    }
+
     const fetchSavings = async () => {
-        interface DataItem {
-            name: string;
-            amount: number;
-        }
-    
         try {
             const response = await get(ENDPOINT.SAVINGS);
-    
-            let result: {
-                names: string[];
-                amounts: number[];
-            } = {
-                names: [],
-                amounts: []
-            };
-    
-            (response.data as DataItem[]).forEach(({ name, amount }) => {
-                result.names.push(name);
-                result.amounts.push(amount);
-            });
-    
-            setChartData(result); // Change this line to setChartData(result)
+            setSavings(response.data)
+
+            const chartData = generateChartData(response.data)
+            setChartData(chartData); // Change this line to setChartData(result)
         } catch (err) {
             console.error(err); // Optional: Add error logging
         }
     };
-    
 
     const renderPieChart = () => {
         if (chartContainer.current) {
@@ -70,12 +65,7 @@ const Savings: React.FC = () => {
                     {
                         label: "Amount",
                         data: chartData.amounts,
-                        backgroundColor: [
-                            '#1164B2',
-                            '#1cae70',
-                            '#4B44FE',
-                            '#A1333B',
-                        ],
+                        backgroundColor: chartData.colors,
                         hoverOffset: 4,
                     },
                 ],
@@ -92,7 +82,7 @@ const Savings: React.FC = () => {
                             const index = chartElement.index;
                             const name = data.labels[index];
                             const amount = data.datasets[datasetIndex].data[index];
-                            alert(`You clicked on ${name}: ${amount}`);
+                            setActiveSaving(name)
                         }
                     }
                 }
@@ -110,7 +100,15 @@ const Savings: React.FC = () => {
             <Col md={7}>
                 <p className='m-0'>Details</p>
                 <div className='divider' />
-                {JSON.stringify(savings)}
+                {
+                    details.map(({ name, amount, description }) => {
+                        return <>
+                            <p>{name}</p>
+                            <p>{amount}</p>
+                            <p>{description}</p>
+                        </>
+                    })
+                }
             </Col>
         </Row>
     </div>;
