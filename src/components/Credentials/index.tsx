@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image';
 import CredentialForm from './components/credentialForm';
-import { CARD_MODE, ENDPOINT, FIELD_LABEL_MAPPER, INITIAL_CREDENTIAL_FORM, TOAST_ICON } from '../../config';
+import { CARD_MODE, ENDPOINT, CREDENTIALS_FIELD_LABEL_MAPPER, INITIAL_CREDENTIAL_FORM, TOAST_ICON } from '../../config';
 import { showToast } from '../../features/toast/toastSlice';
 import { get, patch, axiosDelete, post } from '../../helper/axiosHelper';
 import { Credential, CredentialFormType } from './types';
@@ -153,19 +153,19 @@ const Credentials = () => {
             <Card.Body>
                 <Card.Text className='mb-1'>
                     <strong>
-                        {FIELD_LABEL_MAPPER.website_url}
+                        {CREDENTIALS_FIELD_LABEL_MAPPER.website_url}
                     </strong>
                 </Card.Text>
                 <Card.Text>{credential.website_url}</Card.Text>
                 <Card.Text className='mb-1'>
                     <strong>
-                        {FIELD_LABEL_MAPPER.username}
+                        {CREDENTIALS_FIELD_LABEL_MAPPER.username}
                     </strong>
                 </Card.Text>
                 <Card.Text>{credential.username}</Card.Text>
                 <Card.Text className='mb-1'>
                     <strong>
-                        {FIELD_LABEL_MAPPER.password}
+                        {CREDENTIALS_FIELD_LABEL_MAPPER.password}
                     </strong>
                 </Card.Text>
                 <Card.Text>{credential.password}</Card.Text>

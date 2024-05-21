@@ -1,23 +1,23 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
-import { CredentialFormType } from '../types';
-import { CREDENTIALS_FIELD_LABEL_MAPPER, credentialFormFields } from '../../../config';
+import { SavingFormType } from '../types';
+import { SAVINGS_FIELD_LABEL_MAPPER, savingFormFields } from '../../../config';
 
-interface CredentialFormProps {
-    form: CredentialFormType,
+interface SavingFormProps {
+    form: SavingFormType,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
 }
 
-const CredentialForm: React.FC<CredentialFormProps> = ({
+const SavingForm: React.FC<SavingFormProps> = ({
     form,
     onChange
 }) => {
     return <Form.Group className="mb-3">
         {
-            credentialFormFields.map((field) => <>
+            savingFormFields.map((field) => <>
                 <Form.Label className='mb-1'>
                     <strong>
-                        {CREDENTIALS_FIELD_LABEL_MAPPER[field]}
+                        {SAVINGS_FIELD_LABEL_MAPPER[field]}
                     </strong>
                 </Form.Label>
                 <Form.Control
@@ -33,4 +33,4 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
     </Form.Group>
 }
 
-export default CredentialForm
+export default SavingForm

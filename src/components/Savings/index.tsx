@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
-import { get } from '../../helper/axiosHelper'
-import { ENDPOINT } from '../../config';
+import { get, post } from '../../helper/axiosHelper'
+import { ENDPOINT, INITIAL_SAVING_FORM } from '../../config';
 import { generateChartData } from '../../helper/generateChartData';
 import { formatToRupiah } from '../../helper/formatToRupiah';
+import SavingForm from './components/savingForm';
 import './styles.css';
+import { SavingFormType } from './types';
 
 // Register necessary chart components
 Chart.register(...registerables);
@@ -18,6 +22,8 @@ const Savings: React.FC = () => {
     const [chartData, setChartData] = useState<{ names: string[], amounts: number[], colors: string[] }>({ names: [], amounts: [], colors: [] });
     const [activeSaving, setActiveSaving] = useState("");
     const [details, setDetails] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [form, setForm] = useState<SavingFormType>(INITIAL_SAVING_FORM);
 
     useEffect(() => {
         fetchSavings()
@@ -93,7 +99,36 @@ const Savings: React.FC = () => {
         }
     }
 
+    const onOpenCreateSavingModal = () => {
+        setIsModalOpen(true)
+    }
+
+    const submitCreateSaving = async () => {
+        try {
+            const payload = {
+                name: form.name,
+                amount: Number(form.amount),
+                description: form.description
+            }
+
+            await post(ENDPOINT.SAVINGS, payload)
+
+            fetchSavings()
+        } catch (err) {
+            console.log('error');
+            console.log(err);
+        }
+        setIsModalOpen(false)
+    }
+
+    const onChangeInputText = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    }
+
     return <div>
+        <Button onClick={onOpenCreateSavingModal}>
+            Create credential
+        </Button>
         <Row>
             <Col md={5}>
                 <canvas ref={chartContainer} />
@@ -111,6 +146,20 @@ const Savings: React.FC = () => {
                 }
             </Col>
         </Row>
+
+        <Modal
+            show={isModalOpen}>
+            <div className='p-3'>
+                <SavingForm
+                    form={form}
+                    onChange={onChangeInputText}
+                />
+                <div className='d-flex justify-content-between'>
+                    <Button variant='info' onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                    <Button variant='primary' onClick={submitCreateSaving}>Confirm</Button>
+                </div>
+            </div>
+        </Modal>
     </div>;
 };
 

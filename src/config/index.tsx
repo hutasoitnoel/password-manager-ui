@@ -1,4 +1,9 @@
 import { CredentialFormType } from "../components/Credentials/types"
+import { SavingFormType } from "../components/Savings/types"
+
+interface StringMapper {
+    [key: string]: string;
+}
 
 export const BASE_URL: string = process.env.REACT_APP_PASSWORD_MANAGER_SERVICE_BASE_URL as string
 
@@ -24,6 +29,12 @@ export const INITIAL_CREDENTIAL_FORM: CredentialFormType = {
     password: ""
 }
 
+export const INITIAL_SAVING_FORM: SavingFormType = {
+    name: '',
+    description: '',
+    amount: 0
+}
+
 export const TOAST_ICON = {
     SUCCESS: 'success',
     ERROR: 'error'
@@ -36,11 +47,24 @@ export const credentialFormFields: Array<keyof CredentialFormType> = [
     "password"
 ]
 
-export const FIELD_LABEL_MAPPER: CredentialFormType = {
+
+export const savingFormFields: Array<keyof SavingFormType> = [
+    'name',
+    "amount",
+    "description"
+]
+
+export const CREDENTIALS_FIELD_LABEL_MAPPER: StringMapper = {
     website_name: 'Website Name',
     website_url: 'Website URL',
     username: 'Username',
     password: 'Password'
+}
+
+export const SAVINGS_FIELD_LABEL_MAPPER: StringMapper = {
+    name: 'Name',
+    amount: 'Amount',
+    description: 'Description'
 }
 
 export const SAVING_COLOR_MAPPER = {
