@@ -5,6 +5,7 @@ import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { get } from '../../helper/axiosHelper'
 import { ENDPOINT } from '../../config';
 import { generateChartData } from '../../helper/generateChartData';
+import { formatToRupiah } from '../../helper/formatToRupiah';
 import './styles.css';
 
 // Register necessary chart components
@@ -98,15 +99,14 @@ const Savings: React.FC = () => {
                 <canvas ref={chartContainer} />
             </Col>
             <Col md={7}>
-                <p className='m-0'>Details</p>
+                <p className='m-0'>{activeSaving || 'Details'}</p>
                 <div className='divider' />
                 {
-                    details.map(({ name, amount, description }) => {
-                        return <>
-                            <p>{name}</p>
-                            <p>{amount}</p>
-                            <p>{description}</p>
-                        </>
+                    details.map(({ amount, description }) => {
+                        return <Row>
+                            <Col md={9}>{description}</Col>
+                            <Col md={3}>{formatToRupiah(amount)}</Col>
+                        </Row>
                     })
                 }
             </Col>
