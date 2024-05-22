@@ -3,14 +3,20 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Table from 'react-bootstrap/Table'
+import Image from 'react-bootstrap/Image'
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { get, post } from '../../helper/axiosHelper'
 import { ENDPOINT, INITIAL_SAVING_FORM } from '../../config';
 import { generateChartData } from '../../helper/generateChartData';
 import { formatToRupiah } from '../../helper/formatToRupiah';
 import SavingForm from './components/savingForm';
-import './styles.css';
 import { SavingFormType } from './types';
+
+import EditIcon from '../../icons/edit.png'
+import Deletecon from '../../icons/delete.svg'
+
+import './styles.css';
 
 // Register necessary chart components
 Chart.register(...registerables);
@@ -24,6 +30,7 @@ const Savings: React.FC = () => {
     const [details, setDetails] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form, setForm] = useState<SavingFormType>(INITIAL_SAVING_FORM);
+    const [totalSavings, setTotalSavings] = useState(0);
 
     useEffect(() => {
         fetchSavings()
@@ -45,6 +52,20 @@ const Savings: React.FC = () => {
     useEffect(() => {
         fetchDetails()
     }, [activeSaving])
+
+    useEffect(() => {
+        countTotalSavings()
+    }, [savings])
+
+    const countTotalSavings = () => {
+        let total = 0;
+
+        savings.forEach(({ amount }) => {
+            total += amount
+        });
+
+        setTotalSavings(total);
+    }
 
     const fetchDetails = () => {
         const data = savings.filter(({ name }) => name === activeSaving)
@@ -132,18 +153,39 @@ const Savings: React.FC = () => {
         <Row>
             <Col md={5}>
                 <canvas ref={chartContainer} />
+                <p>Total: {formatToRupiah(totalSavings)}</p>
             </Col>
             <Col md={7}>
                 <p className='m-0'>{activeSaving || 'Details'}</p>
                 <div className='divider' />
-                {
-                    details.map(({ amount, description }) => {
-                        return <Row>
-                            <Col md={9}>{description}</Col>
-                            <Col md={3}>{formatToRupiah(amount)}</Col>
-                        </Row>
-                    })
-                }
+                <Table
+                    striped
+                    bordered
+                    hover
+                >
+                    <thead>
+                        <tr>
+                            <th style={{ width: '25%' }}>Amount</th>
+                            <th>Note</th>
+                            <th style={{ width: '10%' }}>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            details.map(({ amount, description }, index) => {
+                                return <tr key={index}>
+                                    <td>{formatToRupiah(amount)}</td>
+                                    <td>{description || '-'}</td>
+                                    <td className='d-flex justify-content-around align-items-center'>
+                                        <Image src={EditIcon} height={25} />
+                                        <Image src={Deletecon} height={25} />
+                                    </td>
+                                </tr>
+                            })
+                        }
+                    </tbody>
+                </Table>
+
             </Col>
         </Row>
 
