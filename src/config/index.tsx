@@ -69,7 +69,7 @@ export const SAVINGS_FIELD_LABEL_MAPPER: StringMapper = {
 
 export const SAVING_COLOR_MAPPER = {
     BCA: '#1164B2',
-    Bibit: '#1164B2',
+    Bibit: '#219F5F',
     Pluang: '#4B44FE',
     Stockbit: '#343434',
     Koinworks: '#A1333B'
