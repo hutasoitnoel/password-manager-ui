@@ -8,3 +8,11 @@
     border: 0;
     border-top: 1px solid black;
 }
+
+.action-style {
+    height: 25px;
+}
+
+.action-style:hover {
+    cursor: pointer;
+}

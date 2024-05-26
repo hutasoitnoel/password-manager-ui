@@ -6,12 +6,12 @@ import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table'
 import Image from 'react-bootstrap/Image'
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
-import { get, post } from '../../helper/axiosHelper'
+import { get, patch, post, axiosDelete } from '../../helper/axiosHelper'
 import { ENDPOINT, INITIAL_SAVING_FORM } from '../../config';
 import { generateChartData } from '../../helper/generateChartData';
 import { formatToRupiah } from '../../helper/formatToRupiah';
 import SavingForm from './components/savingForm';
-import { SavingFormType } from './types';
+import { Saving, SavingFormType } from './types';
 
 import EditIcon from '../../icons/edit.png'
 import Deletecon from '../../icons/delete.svg'
@@ -24,13 +24,14 @@ Chart.register(...registerables);
 const Savings: React.FC = () => {
     const chartContainer = useRef<HTMLCanvasElement>(null);
     const chartInstance = useRef<Chart<'pie'> | null>(null);
-    const [savings, setSavings] = useState([]);
+    const [savings, setSavings] = useState<Saving[]>([]);
     const [chartData, setChartData] = useState<{ names: string[], amounts: number[], colors: string[] }>({ names: [], amounts: [], colors: [] });
     const [activeSaving, setActiveSaving] = useState("");
-    const [details, setDetails] = useState([]);
+    const [details, setDetails] = useState<Saving[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form, setForm] = useState<SavingFormType>(INITIAL_SAVING_FORM);
     const [totalSavings, setTotalSavings] = useState(0);
+    const [editId, setEditId] = useState(0);
 
     useEffect(() => {
         fetchSavings()
@@ -51,7 +52,7 @@ const Savings: React.FC = () => {
 
     useEffect(() => {
         fetchDetails()
-    }, [activeSaving])
+    }, [savings, activeSaving])
 
     useEffect(() => {
         countTotalSavings()
@@ -121,10 +122,12 @@ const Savings: React.FC = () => {
     }
 
     const onOpenCreateSavingModal = () => {
+        setForm(INITIAL_SAVING_FORM)
+        setEditId(0)
         setIsModalOpen(true)
     }
 
-    const submitCreateSaving = async () => {
+    const onSubmitSavingForm = async () => {
         try {
             const payload = {
                 name: form.name,
@@ -132,9 +135,14 @@ const Savings: React.FC = () => {
                 description: form.description
             }
 
-            await post(ENDPOINT.SAVINGS, payload)
+            if (editId) {
+                await patch(`${ENDPOINT.SAVINGS}/${editId}`, payload)
+            } else {
+                await post(ENDPOINT.SAVINGS, payload)
+            }
 
             fetchSavings()
+            setActiveSaving(payload.name)
         } catch (err) {
             console.log('error');
             console.log(err);
@@ -146,6 +154,22 @@ const Savings: React.FC = () => {
         setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
+    const onEdit = async (detail: Saving) => {
+        setIsModalOpen(true)
+        setForm({
+            name: detail.name,
+            description: detail.description,
+            amount: detail.amount
+        })
+        setEditId(detail.ID)
+        fetchSavings()
+    }
+
+    const onDelete = async (id: number) => {
+        await axiosDelete(`${ENDPOINT.SAVINGS}/${id}`)
+        fetchSavings()
+    }
+
     return <div>
         <Button onClick={onOpenCreateSavingModal}>
             Create credential
@@ -153,39 +177,50 @@ const Savings: React.FC = () => {
         <Row>
             <Col md={5}>
                 <canvas ref={chartContainer} />
-                <p>Total: {formatToRupiah(totalSavings)}</p>
+                <p>
+                    <strong>
+                        Total: {formatToRupiah(totalSavings)}
+                    </strong>
+                </p>
             </Col>
             <Col md={7}>
-                <p className='m-0'>{activeSaving || 'Details'}</p>
+                <p className='m-0'>
+                    <strong>
+                        {activeSaving || 'Click the chart to view saving details'}
+                    </strong>
+                </p>
                 <div className='divider' />
-                <Table
-                    striped
-                    bordered
-                    hover
-                >
-                    <thead>
-                        <tr>
-                            <th style={{ width: '25%' }}>Amount</th>
-                            <th>Note</th>
-                            <th style={{ width: '10%' }}>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            details.map(({ amount, description }, index) => {
-                                return <tr key={index}>
-                                    <td>{formatToRupiah(amount)}</td>
-                                    <td>{description || '-'}</td>
-                                    <td className='d-flex justify-content-around align-items-center'>
-                                        <Image src={EditIcon} height={25} />
-                                        <Image src={Deletecon} height={25} />
-                                    </td>
-                                </tr>
-                            })
-                        }
-                    </tbody>
-                </Table>
+                {
+                    activeSaving && <Table
+                        striped
+                        bordered
+                        hover
+                    >
+                        <thead>
+                            <tr>
+                                <th style={{ width: '25%' }}>Amount</th>
+                                <th>Note</th>
+                                <th style={{ width: '10%' }}>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                details.map((detail, index) => {
+                                    const { ID, amount, description } = detail
 
+                                    return <tr key={index}>
+                                        <td>{formatToRupiah(amount)}</td>
+                                        <td>{description || '-'}</td>
+                                        <td className='d-flex justify-content-around align-items-center'>
+                                            <Image onClick={() => onEdit(detail)} src={EditIcon} className='action-style' />
+                                            <Image onClick={() => onDelete(ID)} src={Deletecon} className='action-style' />
+                                        </td>
+                                    </tr>
+                                })
+                            }
+                        </tbody>
+                    </Table>
+                }
             </Col>
         </Row>
 
@@ -198,7 +233,7 @@ const Savings: React.FC = () => {
                 />
                 <div className='d-flex justify-content-between'>
                     <Button variant='info' onClick={() => setIsModalOpen(false)}>Cancel</Button>
-                    <Button variant='primary' onClick={submitCreateSaving}>Confirm</Button>
+                    <Button variant='primary' onClick={onSubmitSavingForm}>Confirm</Button>
                 </div>
             </div>
         </Modal>
