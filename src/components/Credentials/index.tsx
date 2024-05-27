@@ -181,7 +181,7 @@ const Credentials = () => {
             {credentials.map((credential, index) => {
                 const isActiveCard = index === activeCardIndex;
 
-                return <Col className='col-3 my-3' key={index}>
+                return <Col md={3} className='my-3' key={index}>
                     <Card className='card-style'>
                         {
                             isActiveCard && activeCardMode === CARD_MODE.EDIT ?
