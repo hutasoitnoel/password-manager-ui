@@ -1,7 +1,6 @@
 import React from 'react';
 import { Login, Register, Dashboard } from './components';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-tabs/style/react-tabs.css';
 import CommonToast from './components/CommonToast';
 import './App.css';

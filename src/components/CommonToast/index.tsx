@@ -1,5 +1,5 @@
 import React from 'react';
-import Toast from 'react-bootstrap/Toast'
+// import Toast from 'react-bootstrap/Toast'
 import { useDispatch, useSelector } from 'react-redux';
 import errorIcon from '../../icons/error.svg'
 import successIcon from '../../icons/success.svg'
@@ -24,18 +24,19 @@ const CommonToast = () => {
             break;
     }
 
-    return <Toast
-        show={show}
-        onClose={() => dispatch(hideToast())}
-        className='toast-position'
-        delay={3000}
-        autohide
-    >
-        <Toast.Body>
-            <img src={src} className="rounded me-2" alt="toast-icon" height={15} />
-            <strong className="me-auto">{message.text}</strong>
-        </Toast.Body>
-    </Toast>
+    return <></>
+    //  <Toast
+    //     show={show}
+    //     onClose={() => dispatch(hideToast())}
+    //     className='toast-position'
+    //     delay={3000}
+    //     autohide
+    // >
+    //     <Toast.Body>
+    //         <img src={src} className="rounded me-2" alt="toast-icon" height={15} />
+    //         <strong className="me-auto">{message.text}</strong>
+    //     </Toast.Body>
+    // </Toast>
 }
 
 export default CommonToast

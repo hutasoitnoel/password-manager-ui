@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { showToast } from '../../features/toast/toastSlice'
 import { ENDPOINT, TOAST_ICON } from '../../config';
@@ -46,7 +42,7 @@ const Dashboard = () => {
     }
 
     return <div className='container my-5'>
-        <Row>
+        {/* <Row>
             <Col md={11}>
                 <Tabs>
                     <TabList>
@@ -90,7 +86,7 @@ const Dashboard = () => {
                     Logout
                 </Button>
             </Col>
-        </Row>
+        </Row> */}
     </div>
 };
 

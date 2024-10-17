@@ -1,10 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Table from 'react-bootstrap/Table'
-import Image from 'react-bootstrap/Image'
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { get, patch, post, axiosDelete } from '../../helper/axiosHelper'
 import { ENDPOINT, INITIAL_SAVING_FORM } from '../../config';
@@ -171,7 +165,7 @@ const Savings: React.FC = () => {
     }
 
     return <div>
-        <Button onClick={onOpenCreateSavingModal}>
+        {/* <Button onClick={onOpenCreateSavingModal}>
             Create credential
         </Button>
         <Row>
@@ -236,7 +230,7 @@ const Savings: React.FC = () => {
                     <Button variant='primary' onClick={onSubmitSavingForm}>Confirm</Button>
                 </div>
             </div>
-        </Modal>
+        </Modal> */}
     </div>;
 };
 

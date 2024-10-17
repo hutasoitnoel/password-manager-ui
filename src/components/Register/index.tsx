@@ -1,8 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
-import { Formik, Form, Field } from 'formik';
 import { useDispatch } from 'react-redux';
-import Button from 'react-bootstrap/Button'
 import { showToast } from '../../features/toast/toastSlice'
 import { ENDPOINT, TOAST_ICON } from '../../config';
 import { post } from '../../helper/axiosHelper';
@@ -25,7 +23,7 @@ const Register = () => {
 
     return <div className='container my-3'>
         <h2>Register</h2>
-        <Formik
+        {/* <Formik
             initialValues={{
                 username: "",
                 password: ""
@@ -46,7 +44,7 @@ const Register = () => {
                     Submit
                 </Button>
             </Form>
-        </Formik>
+        </Formik> */}
     </div>
 };
 

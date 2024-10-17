@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Modal from 'react-bootstrap/Modal';
-import Image from 'react-bootstrap/Image';
 import CredentialForm from './components/credentialForm';
 import { CARD_MODE, ENDPOINT, CREDENTIALS_FIELD_LABEL_MAPPER, INITIAL_CREDENTIAL_FORM, TOAST_ICON } from '../../config';
 import { showToast } from '../../features/toast/toastSlice';
@@ -14,7 +8,7 @@ import { Credential, CredentialFormType } from './types';
 
 import './styles.css'
 
-const Credentials = () => {
+const Credentials: React.FC = () => {
     const dispatch = useDispatch()
 
     const [activeCardMode, setActiveCardMode] = useState("");
@@ -143,7 +137,7 @@ const Credentials = () => {
 
     const displayCredential = (credential: Credential) => (
         <>
-            <Card.Header className='d-flex align-items-center'>
+            {/* <Card.Header className='d-flex align-items-center'>
                 <Image
                     src={logos[credential.website_name]}
                     className='card-website-logo'
@@ -169,12 +163,12 @@ const Credentials = () => {
                     </strong>
                 </Card.Text>
                 <Card.Text>{credential.password}</Card.Text>
-            </Card.Body>
+            </Card.Body> */}
         </>
     )
 
     return <>
-        <Button onClick={onOpenCreateCredentialModal}>
+        {/* <Button onClick={onOpenCreateCredentialModal}>
             Create credential
         </Button>
         <Row >
@@ -229,7 +223,7 @@ const Credentials = () => {
                     <Button variant='primary' onClick={onConfirmCreate}>Confirm</Button>
                 </div>
             </div>
-        </Modal>
+        </Modal> */}
     </>
 }
 
