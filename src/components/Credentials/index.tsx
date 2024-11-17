@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
-import Image from 'react-bootstrap/Image';
 import CredentialForm from './components/credentialForm';
-import { CARD_MODE, ENDPOINT, CREDENTIALS_FIELD_LABEL_MAPPER, INITIAL_CREDENTIAL_FORM, TOAST_ICON } from '../../config';
+import { CARD_MODE, ENDPOINT, INITIAL_CREDENTIAL_FORM, TOAST_ICON } from '../../config';
 import { showToast } from '../../features/toast/toastSlice';
+import CredentialCard from './components/credentialCard';
 import { get, patch, axiosDelete, post } from '../../helper/axiosHelper';
+import { onChangeInputText } from '../../helper/onChangeInputText';
 import { Credential, CredentialFormType } from './types';
 
 import './styles.css'
@@ -52,9 +52,7 @@ const Credentials = () => {
         setLogos(result)
     }
 
-    const onChangeInputText = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
-    }
+    const formOnChange = (e: React.ChangeEvent<HTMLInputElement>) => onChangeInputText(e, setForm)
 
     const onClickDelete = (index: number) => {
         setActiveCardMode(CARD_MODE.DELETE);
@@ -141,38 +139,6 @@ const Credentials = () => {
         setForm(INITIAL_CREDENTIAL_FORM)
     }
 
-    const displayCredential = (credential: Credential) => (
-        <>
-            <Card.Header className='d-flex align-items-center'>
-                <Image
-                    src={logos[credential.website_name]}
-                    className='card-website-logo'
-                />
-                <Card.Text>{credential.website_name}</Card.Text>
-            </Card.Header>
-            <Card.Body>
-                <Card.Text className='mb-1'>
-                    <strong>
-                        {CREDENTIALS_FIELD_LABEL_MAPPER.website_url}
-                    </strong>
-                </Card.Text>
-                <Card.Text>{credential.website_url}</Card.Text>
-                <Card.Text className='mb-1'>
-                    <strong>
-                        {CREDENTIALS_FIELD_LABEL_MAPPER.username}
-                    </strong>
-                </Card.Text>
-                <Card.Text>{credential.username}</Card.Text>
-                <Card.Text className='mb-1'>
-                    <strong>
-                        {CREDENTIALS_FIELD_LABEL_MAPPER.password}
-                    </strong>
-                </Card.Text>
-                <Card.Text>{credential.password}</Card.Text>
-            </Card.Body>
-        </>
-    )
-
     return <>
         <Button onClick={onOpenCreateCredentialModal}>
             Create credential
@@ -182,38 +148,20 @@ const Credentials = () => {
                 const isActiveCard = index === activeCardIndex;
 
                 return <Col md={3} className='my-3' key={index}>
-                    <Card className='card-style'>
-                        {
-                            isActiveCard && activeCardMode === CARD_MODE.EDIT ?
-                                <Card.Body>
-                                    <CredentialForm
-                                        form={form}
-                                        onChange={onChangeInputText}
-                                    />
-                                </Card.Body>
-                                : displayCredential(credential)
-                        }
-                        <Card.Footer>
-                            {
-                                isActiveCard && activeCardMode === CARD_MODE.EDIT ?
-                                    <div className='d-flex justify-content-between'>
-                                        <Button onClick={onClickCancel} variant='danger'>Cancel</Button>
-                                        <Button onClick={() => onClickConfirmEdit(index)} variant='info'>Confirm</Button>
-                                    </div>
-                                    :
-                                    isActiveCard && activeCardMode === CARD_MODE.DELETE ?
-                                        <div className='d-flex justify-content-between'>
-                                            <Button onClick={onClickCancel} variant='info'>Cancel</Button>
-                                            <Button onClick={() => onClickConfirmDelete(index)} variant='danger'>Delete</Button>
-                                        </div>
-                                        :
-                                        <div className='d-flex justify-content-between'>
-                                            <Button onClick={() => onClickDelete(index)} variant='danger'>Delete</Button>
-                                            <Button onClick={() => onClickEdit(index)} variant='info'>Edit</Button>
-                                        </div>
-                            }
-                        </Card.Footer>
-                    </Card>
+                    <CredentialCard
+                        logos={logos}
+                        credential={credential}
+                        isActiveCard={isActiveCard}
+                        activeCardMode={activeCardMode}
+                        index={index}
+                        onClickDelete={onClickDelete}
+                        onClickEdit={onClickEdit}
+                        onClickCancel={onClickCancel}
+                        onClickConfirmEdit={onClickConfirmEdit}
+                        onClickConfirmDelete={onClickConfirmDelete}
+                        form={form}
+                        formOnChange={formOnChange}
+                    />
                 </Col>
             })}
         </Row>
@@ -222,7 +170,7 @@ const Credentials = () => {
             <div className='p-3'>
                 <CredentialForm
                     form={form}
-                    onChange={onChangeInputText}
+                    onChange={formOnChange}
                 />
                 <div className='d-flex justify-content-between'>
                     <Button variant='info' onClick={onCancelCreateCredentialModal}>Cancel</Button>
