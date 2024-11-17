@@ -1,5 +1,5 @@
 import React from 'react';
-import { Login, Register, Dashboard } from './components';
+import { Login, Dashboard } from './components';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-tabs/style/react-tabs.css';
@@ -11,8 +11,8 @@ const App = () => {
     <Router>
       <Routes>
         <Route path='/' Component={Dashboard} />
-        <Route path='/login' Component={Login} />
-        <Route path='/register' Component={Register} />
+        <Route path='/login' element={<Login type='LOGIN' />} />
+        <Route path='/register' element={<Login type='REGISTER' />} />
       </Routes>
     </Router>
     <CommonToast />

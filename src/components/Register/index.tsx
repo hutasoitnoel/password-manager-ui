@@ -1,11 +1,9 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom'
-import { Formik, Form, Field } from 'formik';
 import { useDispatch } from 'react-redux';
-import Button from 'react-bootstrap/Button'
 import { showToast } from '../../features/toast/toastSlice'
 import { ENDPOINT, TOAST_ICON } from '../../config';
 import { post } from '../../helper/axiosHelper';
+import UserForm from '../Credentials/components/userForm';
 import './styles.css';
 
 const Register = () => {
@@ -25,28 +23,7 @@ const Register = () => {
 
     return <div className='container my-3'>
         <h2>Register</h2>
-        <Formik
-            initialValues={{
-                username: "",
-                password: ""
-            }}
-            onSubmit={onSubmit}
-        >
-            <Form className='register-form'>
-                <label>Username</label>
-                <Field name="username" />
-                <label>Password</label>
-                <Field name="password" />
-                <Button
-                    size='sm'
-                    className='my-2'
-                    type='submit'
-                    variant='info'
-                >
-                    Submit
-                </Button>
-            </Form>
-        </Formik>
+        <UserForm onSubmit={onSubmit} />
     </div>
 };
 
