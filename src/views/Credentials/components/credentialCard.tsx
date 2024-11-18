@@ -72,7 +72,10 @@ const CredentialCard = ({
                             <span>Edit</span>
                         </Label>
                         <Label
-                            onClick={() => onClickDelete(index)}
+                            onClick={() => {
+                                onClickDelete(index)
+                                toggleBurgerMenu()
+                            }}
                             className="block px-4 py-2 text-gray-700 hover:bg-gray-200 hover:cursor-pointer d-flex">
                             <MdDeleteOutline className='mr-2' />
                             <span>Delete</span>
