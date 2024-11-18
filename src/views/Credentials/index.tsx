@@ -11,6 +11,7 @@ import CredentialCard from './components/credentialCard';
 import { get, patch, axiosDelete, post } from '../../helper/axiosHelper';
 import { onChangeInputText } from '../../helper/onChangeInputText';
 import { Credential, CredentialFormType } from './types';
+import { IoMdClose } from "react-icons/io";
 
 import './styles.css'
 
@@ -162,30 +163,21 @@ const Credentials = () => {
                         onClickDelete={onClickDelete}
                         onClickEdit={onClickEdit}
                         onClickCancel={onClickCancel}
-                        onClickConfirmEdit={onClickConfirmEdit}
                         onClickConfirmDelete={onClickConfirmDelete}
-                        form={form}
-                        formOnChange={formOnChange}
                     />
                 </Col>
             })}
         </Row>
         <Modal show={isCreateModalOpen}>
+            <div className='d-flex justify-end'>
+                <IoMdClose className='text-2xl mr-2 mt-2 hover:cursor-pointer' onClick={onCancelCreateCredentialModal}/>
+            </div>
             <div className='p-3'>
                 <CredentialForm
                     form={form}
                     onChange={formOnChange}
+                    onSubmitForm={() => formMode === 'CREATE' ? onConfirmCreate() : onClickConfirmEdit(activeCardIndex)}
                 />
-                <div className='d-flex justify-content-between'>
-                    <Button variant='outline' onClick={onCancelCreateCredentialModal}>Cancel</Button>
-                    <Button variant='default' onClick={() => {
-                        if (formMode === 'CREATE') {
-                            onConfirmCreate();
-                        } else {
-                            onClickConfirmEdit(activeCardIndex);
-                        }
-                    }}>Confirm</Button>
-                </div>
             </div>
         </Modal>
     </>

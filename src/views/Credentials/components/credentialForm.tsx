@@ -7,28 +7,18 @@ import {
     FormMessage,
 } from '../../../components/ui/form';
 import { Input } from '../../../components/ui/input';
+import { Button } from '../../../components/ui/button';
 import { CREDENTIALS_FIELD_LABEL_MAPPER, CREDENTIALS_FIELD_PLACEHOLDER_MAPPER, credentialFormFields } from '../../../config';
+import { formSchema } from './config'
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-const CredentialForm = ({ form, onChange }: any) => {
-    const formSchema = z.object({
-        website_name: z.string().min(2, {
-            message: 'Website name must be at least 2 characters.',
-        }),
-        website_url: z.string().url({
-            message: 'Enter a valid URL.',
-        }),
-        username: z.string().min(4, {
-            message: 'Username must be at least 4 characters.',
-        }),
-        password: z.string().min(4, {
-            message: 'Password must be at least 4 characters.',
-        }),
-    });
-
-    // Configure react-hook-form
+const CredentialForm = ({
+    form,
+    onChange,
+    onSubmitForm
+}: any) => {
     const formConfig = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -39,15 +29,10 @@ const CredentialForm = ({ form, onChange }: any) => {
         },
     });
 
-    // Handle the submission (optional)
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log('Form submitted:', data);
-    };
-
     return (
         <div className="mb-3">
             <Form {...formConfig}>
-                <form onSubmit={formConfig.handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={formConfig.handleSubmit(onSubmitForm)} className="space-y-4">
                     {credentialFormFields.map((field) => (
                         <FormField
                             key={field}
@@ -59,8 +44,10 @@ const CredentialForm = ({ form, onChange }: any) => {
                                     <FormControl>
                                         <Input
                                             {...fieldProps}
-                                            value={form[field]}
-                                            onChange={onChange}
+                                            onChange={e => {
+                                                fieldProps.onChange(e)
+                                                onChange(e)
+                                            }}
                                             placeholder={CREDENTIALS_FIELD_PLACEHOLDER_MAPPER[field]}
                                         />
                                     </FormControl>
@@ -69,6 +56,7 @@ const CredentialForm = ({ form, onChange }: any) => {
                             )}
                         />
                     ))}
+                    <Button type='submit' variant='default'>Confirm</Button>
                 </form>
             </Form>
         </div>

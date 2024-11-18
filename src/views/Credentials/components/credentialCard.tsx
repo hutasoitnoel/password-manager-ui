@@ -11,8 +11,6 @@ type CredentialCardProps = {
     isActiveCard: any,
     activeCardMode: any,
     index: any,
-    form: any,
-    formOnChange: any,
     onClickDelete: any,
     onClickEdit: any,
     onClickCancel: any,
@@ -26,23 +24,11 @@ const CredentialCard = ({
     isActiveCard,
     activeCardMode,
     index,
-    form,
-    formOnChange,
     onClickDelete,
     onClickEdit,
     onClickCancel,
-    onClickConfirmEdit,
     onClickConfirmDelete
-}: CredentialCardProps) => {
-    const displayForm = () => (
-        <CardContent className='p-6'>
-            <CredentialForm
-                form={form}
-                onChange={formOnChange}
-            />
-        </CardContent>
-    )
-
+}: any) => {
     const displayCredential = (credential: Credential) => (
         <>
             <CardHeader className='d-flex align-items-center'>
@@ -80,10 +66,6 @@ const CredentialCard = ({
     )
 
     const displayButtons = () => {
-        const editModeButtons = <>
-            <Button onClick={onClickCancel} variant='outline' >Cancel</Button>
-            <Button onClick={() => onClickConfirmEdit(index)} >Confirm</Button>
-        </>
         const deleteModeButtons = <>
             <Button onClick={onClickCancel} variant='outline'>Cancel</Button>
             <Button onClick={() => onClickConfirmDelete(index)} variant='destructive' >Delete</Button>
@@ -93,24 +75,18 @@ const CredentialCard = ({
             <Button onClick={() => onClickEdit(index)} >Edit</Button>
         </>
 
-        const isEditMode = isActiveCard && activeCardMode === CARD_MODE.EDIT
         const isDeleteMode = isActiveCard && activeCardMode === CARD_MODE.DELETE
 
         return <CardFooter className='d-flex justify-content-between'>
             {
-                isEditMode ? editModeButtons
-                    : isDeleteMode ? deleteModeButtons
-                        : defaultModeButtons
+                isDeleteMode ? deleteModeButtons
+                    : defaultModeButtons
             }
         </CardFooter>
     }
 
     return <Card className='card-style'>
-        {
-            isActiveCard && activeCardMode === CARD_MODE.EDIT
-                ? displayForm()
-                : displayCredential(credential)
-        }
+        {displayCredential(credential)}
         {displayButtons()}
     </Card>
 }
