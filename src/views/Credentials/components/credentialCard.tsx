@@ -85,7 +85,7 @@ const CredentialCard = ({
         </CardFooter>
     }
 
-    return <Card className='card-style'>
+    return <Card className='card-style d-flex flex-col justify-center min-h-80'>
         {displayCredential(credential)}
         {displayButtons()}
     </Card>
