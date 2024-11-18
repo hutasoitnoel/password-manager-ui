@@ -35,6 +35,8 @@ const Credentials = () => {
     }, [credentials])
 
     const fetchLogos = async () => {
+        console.log('start fetch logos');
+
         const promise = credentials.map(async ({ website_name }) => {
             const response = await get(ENDPOINT.WEBSITE_LOGO, { name: website_name })
             const { image } = response.data
@@ -42,6 +44,9 @@ const Credentials = () => {
         })
 
         const logoArr = await Promise.all(promise)
+
+        console.log('awaiting promise');
+        console.log(logoArr);
 
         let result: { [key: string]: string } = {}
 
@@ -51,7 +56,10 @@ const Credentials = () => {
             }
         })
 
+        console.log('setting logos')
+        console.log(result)
         setLogos(result)
+        console.log('end set logos');
     }
 
     const formOnChange = (e: React.ChangeEvent<HTMLInputElement>) => onChangeInputText(e, setForm)
