@@ -1,9 +1,7 @@
-import Dashboard from './Dashboard';
-import Login from './Login';
-import Register from './Register';
+import Dashboard from '../views/Dashboard';
+import Login from '../views/Login';
 
 export {
     Dashboard,
     Login,
-    Register
 }

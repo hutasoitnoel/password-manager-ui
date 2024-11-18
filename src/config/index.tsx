@@ -1,5 +1,5 @@
-import { CredentialFormType } from "../components/Credentials/types"
-import { SavingFormType } from "../components/Savings/types"
+import { CredentialFormType } from "../views/Credentials/types"
+import { SavingFormType } from "../views/Savings/types"
 
 interface StringMapper {
     [key: string]: string;
@@ -59,6 +59,13 @@ export const CREDENTIALS_FIELD_LABEL_MAPPER: StringMapper = {
     website_url: 'Website URL',
     username: 'Username',
     password: 'Password'
+}
+
+export const CREDENTIALS_FIELD_PLACEHOLDER_MAPPER: StringMapper = {
+    website_name: 'Google',
+    website_url: 'https://google.com',
+    username: 'JohnDoe',
+    password: '******'
 }
 
 export const SAVINGS_FIELD_LABEL_MAPPER: StringMapper = {

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Button from 'react-bootstrap/Button';
+import { Button } from '../../components/ui/button';
 import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table'
 import Image from 'react-bootstrap/Image'
@@ -172,7 +172,7 @@ const Savings: React.FC = () => {
 
     return <div>
         <Button onClick={onOpenCreateSavingModal}>
-            Create credential
+            Create saving
         </Button>
         <Row>
             <Col md={5}>
@@ -212,8 +212,18 @@ const Savings: React.FC = () => {
                                         <td>{formatToRupiah(amount)}</td>
                                         <td>{description || '-'}</td>
                                         <td className='d-flex justify-content-around align-items-center'>
-                                            <Image onClick={() => onEdit(detail)} src={EditIcon} className='action-style' />
-                                            <Image onClick={() => onDelete(ID)} src={Deletecon} className='action-style' />
+                                            <img
+                                                alt='edit'
+                                                onClick={() => onEdit(detail)}
+                                                src={EditIcon}
+                                                className='action-style'
+                                            />
+                                            <img
+                                                alt='delete'
+                                                onClick={() => onDelete(ID)}
+                                                src={Deletecon}
+                                                className='action-style'
+                                            />
                                         </td>
                                     </tr>
                                 })
@@ -232,8 +242,8 @@ const Savings: React.FC = () => {
                     onChange={onChangeInputText}
                 />
                 <div className='d-flex justify-content-between'>
-                    <Button variant='info' onClick={() => setIsModalOpen(false)}>Cancel</Button>
-                    <Button variant='primary' onClick={onSubmitSavingForm}>Confirm</Button>
+                    <Button variant='outline' onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                    <Button variant='default' onClick={onSubmitSavingForm}>Confirm</Button>
                 </div>
             </div>
         </Modal>

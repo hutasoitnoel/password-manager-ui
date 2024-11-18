@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import Button from 'react-bootstrap/Button';
+import { Button } from '../../components/ui/button'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
@@ -18,11 +18,12 @@ const Credentials = () => {
     const dispatch = useDispatch()
 
     const [activeCardMode, setActiveCardMode] = useState("");
-    const [activeCardIndex, setActiveCardIndex] = useState<Number>();
+    const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
     const [credentials, setCredentials] = useState<Credential[]>([]);
     const [form, setForm] = useState<CredentialFormType>(INITIAL_CREDENTIAL_FORM);
     const [logos, setLogos] = useState<{ [key: string]: string }>({});
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [formMode, setFormMode] = useState('EDIT')
 
     useEffect(() => {
         fetchCredentials()
@@ -60,9 +61,10 @@ const Credentials = () => {
     }
 
     const onClickEdit = (index: number) => {
-        setActiveCardMode(CARD_MODE.EDIT);
         setActiveCardIndex(index);
+        setIsCreateModalOpen(true)
         setForm(credentials[index]);
+        setFormMode('EDIT')
     }
 
     const onClickCancel = () => {
@@ -82,6 +84,8 @@ const Credentials = () => {
         }
 
         setActiveCardMode("");
+        setIsCreateModalOpen(false)
+        fetchCredentials()
     }
 
     const onClickConfirmDelete = async (index: number) => {
@@ -137,6 +141,7 @@ const Credentials = () => {
     const onOpenCreateCredentialModal = () => {
         setIsCreateModalOpen(true)
         setForm(INITIAL_CREDENTIAL_FORM)
+        setFormMode('CREATE')
     }
 
     return <>
@@ -165,16 +170,21 @@ const Credentials = () => {
                 </Col>
             })}
         </Row>
-        <Modal
-            show={isCreateModalOpen}>
+        <Modal show={isCreateModalOpen}>
             <div className='p-3'>
                 <CredentialForm
                     form={form}
                     onChange={formOnChange}
                 />
                 <div className='d-flex justify-content-between'>
-                    <Button variant='info' onClick={onCancelCreateCredentialModal}>Cancel</Button>
-                    <Button variant='primary' onClick={onConfirmCreate}>Confirm</Button>
+                    <Button variant='outline' onClick={onCancelCreateCredentialModal}>Cancel</Button>
+                    <Button variant='default' onClick={() => {
+                        if (formMode === 'CREATE') {
+                            onConfirmCreate();
+                        } else {
+                            onClickConfirmEdit(activeCardIndex);
+                        }
+                    }}>Confirm</Button>
                 </div>
             </div>
         </Modal>
