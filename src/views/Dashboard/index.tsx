@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import Button from 'react-bootstrap/Button';
+import { Button } from '../../components/ui/button';
+import { Label } from '../../components/ui/label';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { showToast } from '../../features/toast/toastSlice'
 import { ENDPOINT, TOAST_ICON } from '../../config';
@@ -14,6 +14,9 @@ import Savings from '../Savings';
 
 import credentialIcon from '../../icons/credential.png';
 import savingsIcon from '../../icons/savings.png'
+import { LiaUserLockSolid } from "react-icons/lia";
+import { FaUserLock } from "react-icons/fa";
+import { MdOutlineSavings } from "react-icons/md";
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -52,24 +55,18 @@ const Dashboard = () => {
                     <TabList>
                         <Tab>
                             <div className='d-flex align-items-center'>
-                                <Image
-                                    src={credentialIcon}
-                                    height={15}
-                                />
-                                <p className='m-0'>
+                                <LiaUserLockSolid /> 
+                                <Label className='text-lg'>
                                     Credentials
-                                </p>
+                                </Label>
                             </div>
                         </Tab>
                         <Tab>
                             <div className='d-flex align-items-center'>
-                                <Image
-                                    src={savingsIcon}
-                                    height={15}
-                                />
-                                <p className='m-0'>
+                                <MdOutlineSavings />
+                                <Label className='text-lg'>
                                     Savings
-                                </p>
+                                </Label>
                             </div>
                         </Tab>
                     </TabList>
@@ -84,7 +81,7 @@ const Dashboard = () => {
             </Col>
             <Col md={1}>
                 <Button
-                    variant='danger'
+                    variant='destructive'
                     onClick={onClickLogout}
                 >
                     Logout

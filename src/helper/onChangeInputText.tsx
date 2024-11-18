@@ -1,5 +1,5 @@
 import React from "react"
-import { CredentialFormType } from "../components/Credentials/types"
+import { CredentialFormType } from "../views/Credentials/types"
 
 export const onChangeInputText = (
     e: React.ChangeEvent<HTMLInputElement>,

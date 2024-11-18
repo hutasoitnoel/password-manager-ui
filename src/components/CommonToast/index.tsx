@@ -6,6 +6,8 @@ import successIcon from '../../icons/success.svg'
 import { TOAST_ICON } from '../../config';
 import { RootState } from '../../store'
 import { hideToast } from '../../features/toast/toastSlice'
+import { MdError } from "react-icons/md";
+import './styles.css'
 
 const CommonToast = () => {
     const { show, message } = useSelector((state: RootState) => state.toast);
@@ -31,8 +33,8 @@ const CommonToast = () => {
         delay={3000}
         autohide
     >
-        <Toast.Body>
-            <img src={src} className="rounded me-2" alt="toast-icon" height={15} />
+        <Toast.Body className='d-flex items-center'>
+            <MdError className='mr-2 text-md' />
             <strong className="me-auto">{message.text}</strong>
         </Toast.Body>
     </Toast>
