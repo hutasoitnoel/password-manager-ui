@@ -11,7 +11,7 @@ import { ENDPOINT, TOAST_ICON } from '../../config';
 import { get, post } from '../../helper/axiosHelper';
 import Credentials from '../Credentials';
 import Savings from '../Savings';
-import Identity from '../Identity';
+import Identification from '../Identification';
 
 import credentialIcon from '../../icons/credential.png';
 import savingsIcon from '../../icons/savings.png'
@@ -75,7 +75,7 @@ const Dashboard = () => {
                             <div className='d-flex align-items-center'>
                                 <FaAddressCard className='mr-2' />
                                 <Label className='text-lg'>
-                                    Identity
+                                    Identifications
                                 </Label>
                             </div>
                         </Tab>
@@ -88,7 +88,7 @@ const Dashboard = () => {
                         <Savings />
                     </TabPanel> */}
                     <TabPanel>
-                        <Identity />
+                        <Identification />
                     </TabPanel>
                 </Tabs>
             </Col>

@@ -15,6 +15,7 @@ export const ENDPOINT = {
     LOGOUT: 'logout',
     REGISTER: 'register',
     PASSWORDS: 'passwords',
+    IDENTIFICATIONS: 'identifications',
     WEBSITE_LOGO: 'website-logo',
     SAVINGS: 'savings'
 }
@@ -32,6 +33,7 @@ export const INITIAL_CREDENTIAL_FORM: CredentialFormType = {
 }
 
 export const INITIAL_KTP_FORM: any = {
+    type: 'KTP',
     id_number: '',
     name: '',
     province: '',
@@ -52,6 +54,7 @@ export const INITIAL_KTP_FORM: any = {
 }
 
 export const INITIAL_SIM_FORM: any = {
+    type: 'SIM',
     id_number: '',
     name: '',
     dob: '',

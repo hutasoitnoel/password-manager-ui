@@ -22,7 +22,7 @@ import {
 import Dropdown from 'react-bootstrap/Dropdown';
 import { IoCloudUpload } from "react-icons/io5";
 import { FiLoader } from "react-icons/fi";
-const IdentityForm = ({
+const IdentificationForm = ({
     form,
     resetForm,
     onChangeForm,
@@ -171,4 +171,4 @@ const IdentityForm = ({
     )
 }
 
-export default IdentityForm
+export default IdentificationForm

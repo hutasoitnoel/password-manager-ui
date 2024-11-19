@@ -1,10 +1,13 @@
 import Modal from 'react-bootstrap/Modal'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import IdentificationCard from './components/identificationCard'
 import { Button } from '../../components/ui/button'
-import { patch, performOCR, post } from '../../helper/axiosHelper';
-import React, { useState } from 'react';
-import IdentityForm from './components/identityForm';
+import { axiosDelete, get, patch, performOCR, post } from '../../helper/axiosHelper';
+import React, { useEffect, useState } from 'react';
+import IdentificationForm from './components/identificationForm';
 import { IoMdClose } from 'react-icons/io';
-import { INITIAL_KTP_FORM, TOAST_ICON } from '../../config';
+import { ENDPOINT, INITIAL_KTP_FORM, TOAST_ICON } from '../../config';
 import { onChangeInputText } from '../../helper/onChangeInputText';
 import { useDispatch } from 'react-redux';
 import { showToast } from '../../features/toast/toastSlice';
@@ -13,7 +16,7 @@ const FileUpload = () => {
     const dispatch = useDispatch()
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [identities, setIdentities] = useState<any>([]);
+    const [identifications, setIdentifications] = useState<any>([]);
     const [status, setStatus] = useState<string>('');
     // const [processedImageUrl, setProcessedImageUrl] = useState<string | null>(null);
     const [ocrData, setOcrData] = useState({})
@@ -23,8 +26,19 @@ const FileUpload = () => {
     const [formMode, setFormMode] = useState('EDIT')
     const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
 
-    const fetchIdentities = () => {
+    useEffect(() => {
+        fetchIdentifications()
+    }, [])
 
+
+    const fetchIdentifications = async () => {
+        try {
+            const response = await get(ENDPOINT.IDENTIFICATIONS)
+
+            setIdentifications(response.data)
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,11 +70,11 @@ const FileUpload = () => {
         }
     };
 
-    const onCloseIdentityModal = () => {
+    const onCloseIdentificationModal = () => {
         setIsCreateModalOpen(false)
     }
 
-    const onOpenCreateIdentityModal = () => {
+    const onOpenCreateIdentificationModal = () => {
         setIsCreateModalOpen(true)
     }
 
@@ -90,14 +104,14 @@ const FileUpload = () => {
         }
 
         setIsCreateModalOpen(false)
-        fetchIdentities()
+        fetchIdentifications()
     }
 
     const onClickConfirmEdit = async (index: number) => {
         try {
-            const response = await patch(`passwords/${identities[index].ID}`, form);
+            const response = await patch(`identifications/${identifications[index].ID}`, form);
 
-            identities[index] = response.data;
+            identifications[index] = response.data;
 
             showSuccessToast("Credential edited!")
         } catch (err) {
@@ -107,32 +121,70 @@ const FileUpload = () => {
 
         setActiveCardMode("");
         setIsCreateModalOpen(false)
-        fetchIdentities()
+        fetchIdentifications()
+    }
+
+    const onClickDelete = (index: number) => {
+        setActiveCardMode('DELETE');
+        setActiveCardIndex(index);
+    }
+
+    const onClickEdit = (index: number) => {
+        setActiveCardIndex(index);
+        setIsCreateModalOpen(true)
+        setForm(identifications[index]);
+        setFormMode('EDIT')
+    }
+
+    const onClickCancel = () => {
+        setActiveCardMode("");
+    }
+
+    const onClickConfirmDelete = async (index: number) => {
+        try {
+            await axiosDelete(`identifications/${identifications[index].ID}`);
+            await fetchIdentifications();
+            showSuccessToast("Credential deleted!")
+        } catch (err) {
+            console.log(err);
+            showErrorToast("Error deleting credential")
+        }
+
+        setActiveCardMode("");
     }
 
     return (
         <>
-            <div style={{ padding: '20px', maxWidth: '500px', margin: 'auto' }}>
-                <Button onClick={onOpenCreateIdentityModal}>
-                    Add identity credential
-                </Button>
-                <h1>Image Upload and Processing</h1>
-                <input
-                    type="file"
-                    accept="image/png, image/jpeg"
-                    onChange={handleFileChange}
-                    style={{ marginBottom: '10px' }}
-                />
-                {status && <p>{status}</p>}
-                {JSON.stringify(ocrData)}
+            <Row >
+                <Col md={3} className='my-3'>
+                    <IdentificationCard
+                        isCreateButton={true}
+                        onOpenCreateIdentificationModal={onOpenCreateIdentificationModal}
+                    />
+                </Col>
+                {identifications.map((identification: any, index: any) => {
+                    const isActiveCard = index === activeCardIndex;
 
-            </div>
+                    return <Col md={3} className='my-3' key={index}>
+                        <IdentificationCard
+                            identification={identification}
+                            isActiveCard={isActiveCard}
+                            activeCardMode={activeCardMode}
+                            index={index}
+                            onClickDelete={onClickDelete}
+                            onClickEdit={onClickEdit}
+                            onClickCancel={onClickCancel}
+                            onClickConfirmDelete={onClickConfirmDelete}
+                        />
+                    </Col>
+                })}
+            </Row>
             <Modal show={isCreateModalOpen}>
                 <div className='d-flex justify-end'>
-                    <IoMdClose className='text-2xl mr-2 mt-2 hover:cursor-pointer' onClick={onCloseIdentityModal} />
+                    <IoMdClose className='text-2xl mr-2 mt-2 hover:cursor-pointer' onClick={onCloseIdentificationModal} />
                 </div>
                 <div className='p-3'>
-                    <IdentityForm
+                    <IdentificationForm
                         form={form}
                         onChangeForm={onChangeForm}
                         onChangeField={formOnChange}
