@@ -11,12 +11,14 @@ import { ENDPOINT, TOAST_ICON } from '../../config';
 import { get, post } from '../../helper/axiosHelper';
 import Credentials from '../Credentials';
 import Savings from '../Savings';
+import Identity from '../Identity';
 
 import credentialIcon from '../../icons/credential.png';
 import savingsIcon from '../../icons/savings.png'
 import { LiaUserLockSolid } from "react-icons/lia";
 import { FaUserLock } from "react-icons/fa";
 import { MdOutlineSavings } from "react-icons/md";
+import { FaAddressCard } from "react-icons/fa";
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -55,17 +57,25 @@ const Dashboard = () => {
                     <TabList>
                         <Tab>
                             <div className='d-flex align-items-center'>
-                                <LiaUserLockSolid /> 
+                                <FaUserLock className='mr-2' />
                                 <Label className='text-lg'>
                                     Credentials
                                 </Label>
                             </div>
                         </Tab>
-                        <Tab>
+                        {/* <Tab>
                             <div className='d-flex align-items-center'>
-                                <MdOutlineSavings />
+                                <MdOutlineSavings className='mr-2' />
                                 <Label className='text-lg'>
                                     Savings
+                                </Label>
+                            </div>
+                        </Tab> */}
+                        <Tab>
+                            <div className='d-flex align-items-center'>
+                                <FaAddressCard className='mr-2' />
+                                <Label className='text-lg'>
+                                    Identity
                                 </Label>
                             </div>
                         </Tab>
@@ -74,8 +84,11 @@ const Dashboard = () => {
                     <TabPanel>
                         <Credentials />
                     </TabPanel>
-                    <TabPanel>
+                    {/* <TabPanel>
                         <Savings />
+                    </TabPanel> */}
+                    <TabPanel>
+                        <Identity />
                     </TabPanel>
                 </Tabs>
             </Col>
