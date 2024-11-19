@@ -2,33 +2,18 @@
 import { Card, CardHeader, CardContent, CardFooter, CardDescription } from '../../../components/ui/card'
 import { Button } from '../../../components/ui/button'
 import { Label } from '../../../components/ui/label'
-import CredentialForm from './credentialForm'
-import { CARD_MODE, CREDENTIALS_FIELD_LABEL_MAPPER } from '../../../config'
-import { Credential } from '../types'
+import IdentificationForm from './identificationForm'
+import { CARD_MODE, CREDENTIALS_FIELD_LABEL_MAPPER, KTP_FIELD_LABEL_MAPPER } from '../../../config'
 import { useEffect, useRef, useState } from 'react'
 import { CiMenuBurger } from "react-icons/ci";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { IoIosCreate } from "react-icons/io";
 
-type CredentialCardProps = {
-    logos: any,
-    credential: Credential,
-    isActiveCard: any,
-    activeCardMode: any,
-    index: any,
-    onClickDelete: any,
-    onClickEdit: any,
-    onClickCancel: any,
-    onClickConfirmEdit: any,
-    onClickConfirmDelete: any
-}
-
-const CredentialCard = ({
+const IdentificationCard = ({
     isCreateButton,
-    onOpenCreateCredentialModal,
-    logos,
-    credential,
+    onOpenCreateIdentificationModal,
+    identification,
     isActiveCard,
     activeCardMode,
     index,
@@ -57,11 +42,11 @@ const CredentialCard = ({
 
     if (isCreateButton) {
         return <Card
-            onClick={onOpenCreateCredentialModal}
-            className={`card-style d-flex flex-col justify-center items-center min-h-72 hover:cursor-pointer`}
+            onClick={onOpenCreateIdentificationModal}
+            className={`card-style d-flex flex-col justify-center items-center min-h-64 hover:cursor-pointer`}
         >
             <IoIosCreate className='text-4xl mb-2' />
-            <Label className='text-xl'>Add a new credential</Label>
+            <Label className='text-xl hover:cursor-pointer'>Add a new identification</Label>
         </Card>
     }
 
@@ -69,7 +54,7 @@ const CredentialCard = ({
         setIsBurgerMenuOpen((prev) => !prev);
     };
 
-    const displayCredential = (credential: Credential) => (
+    const displayIdentification = (credential: any) => (
         <>
             <div className='relative d-flex justify-end'>
                 <CiMenuBurger className='mr-4 mt-3 hover:cursor-pointer' onClick={toggleBurgerMenu} />
@@ -96,63 +81,32 @@ const CredentialCard = ({
                     </div>
                 )}
             </div>
-            <CardHeader className='d-flex align-items-center'>
-                {
-                    logos[credential.website_name]
-                        ? <img
-                            src={logos[credential.website_name]}
-                            className='card-website-logo'
-                            alt={credential.website_name}
-                        />
-                        : <CardDescription>{credential.website_name}</CardDescription>
-                }
-            </CardHeader>
             <CardContent>
                 <CardDescription className='mb-1'>
                     <strong>
-                        {CREDENTIALS_FIELD_LABEL_MAPPER.website_url}
+                        ID Type
                     </strong>
                 </CardDescription>
-                <CardDescription className='mb-2'>{credential.website_url}</CardDescription>
+                <CardDescription className='mb-2'>{identification.type || '-'}</CardDescription>
                 <CardDescription className='mb-1'>
                     <strong>
-                        {CREDENTIALS_FIELD_LABEL_MAPPER.username}
+                        {KTP_FIELD_LABEL_MAPPER.id_number}
                     </strong>
                 </CardDescription>
-                <CardDescription className='mb-2'>{credential.username}</CardDescription>
+                <CardDescription className='mb-2'>{identification.id_number || '-'}</CardDescription>
                 <CardDescription className='mb-1'>
                     <strong>
-                        {CREDENTIALS_FIELD_LABEL_MAPPER.password}
+                        {KTP_FIELD_LABEL_MAPPER.name}
                     </strong>
                 </CardDescription>
-                <CardDescription className='mb-2'>{credential.password}</CardDescription>
+                <CardDescription className='mb-2'>{identification.name || '-'}</CardDescription>
             </CardContent>
         </>
     )
 
-    const displayButtons = () => {
-        const deleteModeButtons = <>
-            <Button onClick={onClickCancel} variant='outline'>Cancel</Button>
-            <Button onClick={() => onClickConfirmDelete(index)} variant='destructive' >Delete</Button>
-        </>
-        const defaultModeButtons = <>
-            <Button onClick={() => onClickDelete(index)} variant='destructive'>Delete</Button>
-            <Button onClick={() => onClickEdit(index)} >Edit</Button>
-        </>
-
-        const isDeleteMode = isActiveCard && activeCardMode === CARD_MODE.DELETE
-
-        return <CardFooter className='d-flex justify-content-between'>
-            {
-                isDeleteMode ? deleteModeButtons
-                    : defaultModeButtons
-            }
-        </CardFooter>
-    }
-
     const deleteModeDisplay = <>
         <CardDescription className='mb-2'>
-            Are you sure you want to delete this credential?
+            Are you sure you want to delete this identification info?
         </CardDescription>
         <div className='w-full d-flex justify-evenly'>
             <Button onClick={onClickCancel} variant='outline'>Cancel</Button>
@@ -162,11 +116,11 @@ const CredentialCard = ({
 
     const isDeleteMode = isActiveCard && activeCardMode === CARD_MODE.DELETE
 
-    return <Card className={`card-style d-flex flex-col justify-center min-h-72 ${isDeleteMode && 'items-center text-center'}`}>
+    return <Card className={`card-style d-flex flex-col justify-center min-h-64 ${isDeleteMode && 'items-center text-center'}`}>
         {
-            isDeleteMode ? deleteModeDisplay : displayCredential(credential)
+            isDeleteMode ? deleteModeDisplay : displayIdentification(identification)
         }
     </Card>
 }
 
-export default CredentialCard;
+export default IdentificationCard;

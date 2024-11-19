@@ -1,16 +1,16 @@
 import z from 'zod'
 
 export const formSchema = z.object({
-    website_name: z.string().min(2, {
-        message: 'Website name must be at least 2 characters.',
+    website_name: z.string().min(1, {
+        message: 'Please enter the website name',
     }),
-    website_url: z.string().min(2, {
-        message: 'Enter a valid URL.',
+    website_url: z.string().url({
+        message: 'Please enter a valid URL',
+    }).optional(),
+    username: z.string().min(1, {
+        message: 'Please enter the username/email',
     }),
-    username: z.string().min(4, {
-        message: 'Username must be at least 4 characters.',
-    }),
-    password: z.string().min(4, {
-        message: 'Password must be at least 4 characters.',
+    password: z.string().min(1, {
+        message: 'Please enter the password',
     }),
 });

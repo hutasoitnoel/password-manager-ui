@@ -19,6 +19,7 @@ jobs:
       - name: Build
         run: |
           export REACT_APP_PASSWORD_MANAGER_SERVICE_BASE_URL=${{ secrets.APP_URL }}
+          export REACT_APP_OCR_SERVICE_BASE_URL=${{ secrets.OCR_APP_URL }}
           CI=false npm run build
 
       - name: Push to build branch
