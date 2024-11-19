@@ -26,6 +26,7 @@ import spinner from '../../../icons/spinner.svg'
 
 const IdentificationForm = ({
     form,
+    formMode,
     resetForm,
     onChangeForm,
     onChangeField,
@@ -59,8 +60,6 @@ const IdentificationForm = ({
                 try {
                     setIsLoading(true);
                     const response: any = await performOCR(formData);
-
-                    console.log(response)
 
                     onChangeForm(response.data)
 
@@ -116,6 +115,11 @@ const IdentificationForm = ({
 
     return (
         <>
+            <Label className='text-xl mb-3'>
+                {
+                    formMode === 'CREATE' ? 'Creating a new ID' : 'Editing ID'
+                }
+            </Label>
             <div {...getRootProps()} className='border hover:cursor-pointer d-flex flex-col justify-center items-center px-5 text-center min-h-48 mb-4'>
                 <input {...getInputProps()} />
                 {

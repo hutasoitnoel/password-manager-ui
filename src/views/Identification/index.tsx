@@ -82,6 +82,7 @@ const FileUpload = () => {
 
     const onOpenCreateIdentificationModal = () => {
         setIsCreateModalOpen(true)
+        setFormMode('CREATE')
     }
 
     const showErrorToast = (text: string) => {
@@ -94,7 +95,7 @@ const FileUpload = () => {
 
     // bulk change
     const onChangeForm = (data: any) => {
-        setForm((prev: any) => ({ ...prev, data }))
+        setForm((prev: any) => ({ ...prev, ...data }))
     }
 
     // single field change
@@ -102,7 +103,7 @@ const FileUpload = () => {
 
     const onConfirmCreate = async () => {
         try {
-            await post('passwords', form)
+            await post('identifications', form)
             showSuccessToast("New credential created!")
         } catch (err) {
             console.log(err);
@@ -203,6 +204,7 @@ const FileUpload = () => {
                         form={form}
                         onChangeForm={onChangeForm}
                         onChangeField={formOnChange}
+                        formMode={formMode}
                         onSubmitForm={() => formMode === 'CREATE' ? onConfirmCreate() : onClickConfirmEdit(activeCardIndex)}
                     />
                 </div>

@@ -1,31 +1,83 @@
 import z from 'zod'
 
 export const ktpFormSchema = z.object({
-    website_name: z.string().min(2, {
-        message: 'Website name must be at least 2 characters.',
+    id_number: z.string().min(16, {
+        message: 'Please enter a valid KTP number',
     }),
-    website_url: z.string().min(2, {
-        message: 'Enter a valid URL.',
+    name: z.string().min(1, {
+        message: 'Please enter your name',
     }),
-    username: z.string().min(4, {
-        message: 'Username must be at least 4 characters.',
+    dob: z.string().min(1, {
+        message: 'Please enter your date of birth',
     }),
-    password: z.string().min(4, {
-        message: 'Password must be at least 4 characters.',
+    blood_type: z.string().max(3, {
+        message: 'Please enter a valid blood type',
+    }),
+    gender: z.string().min(1, {
+        message: 'Please enter your gender',
+    }),
+    address: z.string().min(1, {
+        message: 'Please enter your address',
+    }),
+    occupation: z.string().min(1, {
+        message: 'Please enter your occupation',
+    }),
+    expiration_date: z.string().min(1, {
+        message: 'Please enter your SIM\'s expiration date',
+    }),
+    province: z.string().min(1, {
+        message: 'Please enter your province',
+    }),
+    city: z.string().min(1, {
+        message: 'Please enter your city',
+    }),
+    rt_rw: z.string().min(1, {
+        message: 'Please enter your RT/RW',
+    }),
+    sub_district: z.string().min(1, {
+        message: 'Please enter your sub-district',
+    }),
+    district: z.string().min(1, {
+        message: 'Please enter your district',
+    }),
+    religion: z.string().min(1, {
+        message: 'Please enter your religion',
+    }),
+    marital_status: z.string().min(1, {
+        message: 'Please enter your marital status',
+    }),
+    citizenship: z.string().min(1, {
+        message: 'Please enter your citizenship',
     }),
 });
 
+
 export const simFormSchema = z.object({
-    website_name: z.string().min(2, {
-        message: 'Website name must be at least 2 characters.',
+    id_number: z.string().min(14, {
+        message: 'Please enter a valid SIM number',
     }),
-    website_url: z.string().min(2, {
-        message: 'Enter a valid URL.',
+    name: z.string().min(1, {
+        message: 'Please enter your name',
     }),
-    username: z.string().min(4, {
-        message: 'Username must be at least 4 characters.',
+    dob: z.string().min(1, {
+        message: 'Please enter your date of birth',
     }),
-    password: z.string().min(4, {
-        message: 'Password must be at least 4 characters.',
+    blood_type: z.string().max(3, {
+        message: 'Please enter a valid blood type',
+    }),
+    gender: z.string().min(1, {
+        message: 'Please enter your gender',
+    }),
+    address: z.string().min(1, {
+        message: 'Please enter your address',
+    }),
+    occupation: z.string().min(1, {
+        message: 'Please enter your occupation',
+    }),
+    place_of_issue: z.string().min(1, {
+        message: 'Please enter place of issuance of your SIM',
+    }),
+    expiration_date: z.string().min(1, {
+        message: 'Please enter your SIM\'s expiration date',
     }),
 });
