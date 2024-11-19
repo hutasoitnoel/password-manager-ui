@@ -14,6 +14,7 @@ import Savings from '../Savings';
 import Identification from '../Identification';
 import { FaUserLock } from "react-icons/fa";
 import { FaAddressCard } from "react-icons/fa";
+import { MdSavings } from "react-icons/md";
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -58,14 +59,6 @@ const Dashboard = () => {
                                 </Label>
                             </div>
                         </Tab>
-                        {/* <Tab>
-                            <div className='d-flex align-items-center'>
-                                <MdOutlineSavings className='mr-2' />
-                                <Label className='text-lg hover:cursor-pointer'>
-                                    Savings
-                                </Label>
-                            </div>
-                        </Tab> */}
                         <Tab>
                             <div className='d-flex align-items-center'>
                                 <FaAddressCard className='mr-2' />
@@ -74,16 +67,24 @@ const Dashboard = () => {
                                 </Label>
                             </div>
                         </Tab>
+                        <Tab>
+                            <div className='d-flex align-items-center'>
+                                <MdSavings className='mr-2' />
+                                <Label className='text-lg hover:cursor-pointer'>
+                                    Savings
+                                </Label>
+                            </div>
+                        </Tab>
                     </TabList>
 
                     <TabPanel>
                         <Credentials />
                     </TabPanel>
-                    {/* <TabPanel>
-                        <Savings />
-                    </TabPanel> */}
                     <TabPanel>
                         <Identification />
+                    </TabPanel>
+                    <TabPanel>
+                        <Savings />
                     </TabPanel>
                 </Tabs>
             </Col>
