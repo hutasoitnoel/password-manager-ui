@@ -130,7 +130,7 @@ export const CREDENTIALS_FIELD_LABEL_MAPPER: StringMapper = {
 }
 
 export const KTP_FIELD_LABEL_MAPPER: StringMapper = {
-    id_number: 'Identification number',
+    id_number: 'ID number',
     name: 'Name',
     province: 'Province',
     city: 'City',
@@ -149,7 +149,7 @@ export const KTP_FIELD_LABEL_MAPPER: StringMapper = {
 }
 
 export const SIM_FIELD_LABEL_MAPPER: StringMapper = {
-    id_number: 'Identification number',
+    id_number: 'ID number',
     name: 'Name',
     dob: 'Date of birth',
     blood_type: 'Blood type',

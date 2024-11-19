@@ -11,6 +11,7 @@ import { ENDPOINT, INITIAL_KTP_FORM, TOAST_ICON } from '../../config';
 import { onChangeInputText } from '../../helper/onChangeInputText';
 import { useDispatch } from 'react-redux';
 import { showToast } from '../../features/toast/toastSlice';
+import IdentificationDetails from './components/identificationDetails'
 
 const FileUpload = () => {
     const dispatch = useDispatch()
@@ -21,6 +22,7 @@ const FileUpload = () => {
     // const [processedImageUrl, setProcessedImageUrl] = useState<string | null>(null);
     const [ocrData, setOcrData] = useState({})
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+    const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [activeCardMode, setActiveCardMode] = useState("")
     const [form, setForm] = useState(INITIAL_KTP_FORM);
     const [formMode, setFormMode] = useState('EDIT')
@@ -72,6 +74,10 @@ const FileUpload = () => {
 
     const onCloseIdentificationModal = () => {
         setIsCreateModalOpen(false)
+    }
+
+    const onCloseDetailsModal = () => {
+        setIsDetailsModalOpen(false)
     }
 
     const onOpenCreateIdentificationModal = () => {
@@ -153,6 +159,14 @@ const FileUpload = () => {
         setActiveCardMode("");
     }
 
+    const onClickDetails = (index: any) => {
+        console.log('on click card')
+        setIsDetailsModalOpen(true)
+        setActiveCardIndex(index)
+
+        console.log(activeCardIndex)
+    }
+
     return (
         <>
             <Row >
@@ -175,6 +189,7 @@ const FileUpload = () => {
                             onClickEdit={onClickEdit}
                             onClickCancel={onClickCancel}
                             onClickConfirmDelete={onClickConfirmDelete}
+                            onClickDetails={() => onClickDetails(index)}
                         />
                     </Col>
                 })}
@@ -189,6 +204,16 @@ const FileUpload = () => {
                         onChangeForm={onChangeForm}
                         onChangeField={formOnChange}
                         onSubmitForm={() => formMode === 'CREATE' ? onConfirmCreate() : onClickConfirmEdit(activeCardIndex)}
+                    />
+                </div>
+            </Modal>
+            <Modal show={isDetailsModalOpen}>
+                <div className='d-flex justify-end'>
+                    <IoMdClose className='text-2xl mr-2 mt-2 hover:cursor-pointer' onClick={onCloseDetailsModal} />
+                </div>
+                <div className='p-3'>
+                    <IdentificationDetails
+                        identification={identifications[activeCardIndex]}
                     />
                 </div>
             </Modal>

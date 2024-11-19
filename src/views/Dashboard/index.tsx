@@ -12,12 +12,7 @@ import { get, post } from '../../helper/axiosHelper';
 import Credentials from '../Credentials';
 import Savings from '../Savings';
 import Identification from '../Identification';
-
-import credentialIcon from '../../icons/credential.png';
-import savingsIcon from '../../icons/savings.png'
-import { LiaUserLockSolid } from "react-icons/lia";
 import { FaUserLock } from "react-icons/fa";
-import { MdOutlineSavings } from "react-icons/md";
 import { FaAddressCard } from "react-icons/fa";
 
 const Dashboard = () => {

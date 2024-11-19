@@ -9,6 +9,8 @@ import { CiMenuBurger } from "react-icons/ci";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { IoIosCreate } from "react-icons/io";
+import { FaAddressCard } from "react-icons/fa";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 const IdentificationCard = ({
     isCreateButton,
@@ -17,6 +19,7 @@ const IdentificationCard = ({
     isActiveCard,
     activeCardMode,
     index,
+    onClickDetails,
     onClickDelete,
     onClickEdit,
     onClickCancel,
@@ -45,7 +48,7 @@ const IdentificationCard = ({
             onClick={onOpenCreateIdentificationModal}
             className={`card-style d-flex flex-col justify-center items-center min-h-64 hover:cursor-pointer`}
         >
-            <IoIosCreate className='text-4xl mb-2' />
+            <FaAddressCard className='text-4xl mb-2' />
             <Label className='text-xl hover:cursor-pointer'>Add a new identification</Label>
         </Card>
     }
@@ -57,7 +60,8 @@ const IdentificationCard = ({
     const displayIdentification = (credential: any) => (
         <>
             <div className='relative d-flex justify-end'>
-                <CiMenuBurger className='mr-4 mt-3 hover:cursor-pointer' onClick={toggleBurgerMenu} />
+                <FaMagnifyingGlass className='mr-4 hover:cursor-pointer' onClick={onClickDetails}/>
+                <CiMenuBurger className='mr-4 hover:cursor-pointer' onClick={toggleBurgerMenu} />
                 {isBurgerMenuOpen && (
                     <div ref={menuRef} className="absolute bg-white rounded-lg shadow-lg">
                         <Label
@@ -116,7 +120,9 @@ const IdentificationCard = ({
 
     const isDeleteMode = isActiveCard && activeCardMode === CARD_MODE.DELETE
 
-    return <Card className={`card-style d-flex flex-col justify-center min-h-64 ${isDeleteMode && 'items-center text-center'}`}>
+    return <Card
+        className={`card-style d-flex flex-col justify-center min-h-64 ${isDeleteMode && 'items-center text-center'}`}
+    >
         {
             isDeleteMode ? deleteModeDisplay : displayIdentification(identification)
         }

@@ -10,6 +10,7 @@ import { CiMenuBurger } from "react-icons/ci";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { IoIosCreate } from "react-icons/io";
+import { FaUserLock } from "react-icons/fa";
 
 type CredentialCardProps = {
     logos: any,
@@ -60,7 +61,7 @@ const CredentialCard = ({
             onClick={onOpenCreateCredentialModal}
             className={`card-style d-flex flex-col justify-center items-center min-h-72 hover:cursor-pointer`}
         >
-            <IoIosCreate className='text-4xl mb-2' />
+            <FaUserLock className='text-4xl mb-2' />
             <Label className='text-xl'>Add a new credential</Label>
         </Card>
     }

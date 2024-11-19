@@ -22,6 +22,8 @@ import {
 import Dropdown from 'react-bootstrap/Dropdown';
 import { IoCloudUpload } from "react-icons/io5";
 import { FiLoader } from "react-icons/fi";
+import spinner from '../../../icons/spinner.svg'
+
 const IdentificationForm = ({
     form,
     resetForm,
@@ -118,7 +120,7 @@ const IdentificationForm = ({
                 <input {...getInputProps()} />
                 {
                     isLoading
-                        ? <FiLoader className='text-5xl' />
+                        ? <img src={spinner} alt='spinner' />
                         : <>
                             <IoCloudUpload className='text-3xl mb-3' />
                             <Label className='hover:cursor-pointer'>
