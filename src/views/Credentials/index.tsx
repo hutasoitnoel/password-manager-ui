@@ -35,8 +35,6 @@ const Credentials = () => {
     }, [credentials])
 
     const fetchLogos = async () => {
-        console.log('start fetch logos');
-
         const promise = credentials.map(async ({ website_name }) => {
             const response = await get(ENDPOINT.WEBSITE_LOGO, { name: website_name })
             const { image } = response.data
@@ -44,9 +42,6 @@ const Credentials = () => {
         })
 
         const logoArr = await Promise.all(promise)
-
-        console.log('awaiting promise');
-        console.log(logoArr);
 
         let result: { [key: string]: string } = {}
 
@@ -56,10 +51,7 @@ const Credentials = () => {
             }
         })
 
-        console.log('setting logos')
-        console.log(result)
         setLogos(result)
-        console.log('end set logos');
     }
 
     const formOnChange = (e: React.ChangeEvent<HTMLInputElement>) => onChangeInputText(e, setForm)
@@ -154,10 +146,13 @@ const Credentials = () => {
     }
 
     return <>
-        <Button onClick={onOpenCreateCredentialModal}>
-            Create credential
-        </Button>
         <Row >
+            <Col md={3} className='my-3'>
+                <CredentialCard
+                    isCreateButton={true}
+                    onOpenCreateCredentialModal={onOpenCreateCredentialModal}
+                />
+            </Col>
             {credentials.map((credential, index) => {
                 const isActiveCard = index === activeCardIndex;
 
@@ -178,7 +173,7 @@ const Credentials = () => {
         </Row>
         <Modal show={isCreateModalOpen}>
             <div className='d-flex justify-end'>
-                <IoMdClose className='text-2xl mr-2 mt-2 hover:cursor-pointer' onClick={onCancelCreateCredentialModal}/>
+                <IoMdClose className='text-2xl mr-2 mt-2 hover:cursor-pointer' onClick={onCancelCreateCredentialModal} />
             </div>
             <div className='p-3'>
                 <CredentialForm
