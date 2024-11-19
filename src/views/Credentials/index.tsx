@@ -179,6 +179,7 @@ const Credentials = () => {
                 <CredentialForm
                     form={form}
                     onChange={formOnChange}
+                    formMode={formMode}
                     onSubmitForm={() => formMode === 'CREATE' ? onConfirmCreate() : onClickConfirmEdit(activeCardIndex)}
                 />
             </div>

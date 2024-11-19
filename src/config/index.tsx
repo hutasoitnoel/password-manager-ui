@@ -124,7 +124,7 @@ export const savingFormFields: Array<keyof SavingFormType> = [
 
 export const CREDENTIALS_FIELD_LABEL_MAPPER: StringMapper = {
     website_name: 'Website Name',
-    website_url: 'Website URL',
+    website_url: 'URL',
     username: 'Username',
     password: 'Password'
 }

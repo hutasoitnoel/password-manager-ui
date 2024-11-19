@@ -58,7 +58,7 @@ const Dashboard = () => {
                         <Tab>
                             <div className='d-flex align-items-center'>
                                 <FaUserLock className='mr-2' />
-                                <Label className='text-lg'>
+                                <Label className='text-lg hover:cursor-pointer'>
                                     Credentials
                                 </Label>
                             </div>
@@ -66,7 +66,7 @@ const Dashboard = () => {
                         {/* <Tab>
                             <div className='d-flex align-items-center'>
                                 <MdOutlineSavings className='mr-2' />
-                                <Label className='text-lg'>
+                                <Label className='text-lg hover:cursor-pointer'>
                                     Savings
                                 </Label>
                             </div>
@@ -74,7 +74,7 @@ const Dashboard = () => {
                         <Tab>
                             <div className='d-flex align-items-center'>
                                 <FaAddressCard className='mr-2' />
-                                <Label className='text-lg'>
+                                <Label className='text-lg hover:cursor-pointer'>
                                     Identifications
                                 </Label>
                             </div>

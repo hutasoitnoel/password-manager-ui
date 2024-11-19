@@ -13,10 +13,12 @@ import { formSchema } from './config'
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { Label } from '../../../components/ui/label';
 
 const CredentialForm = ({
     form,
     onChange,
+    formMode,
     onSubmitForm
 }: any) => {
     const formConfig = useForm<z.infer<typeof formSchema>>({
@@ -31,6 +33,9 @@ const CredentialForm = ({
 
     return (
         <div className="mb-3">
+            <Label className='text-xl mb-2'>
+                {formMode === 'CREATE' ? 'Creating a new' : 'Editing'} credential
+            </Label>
             <Form {...formConfig}>
                 <form onSubmit={formConfig.handleSubmit(onSubmitForm)} className="space-y-4">
                     {credentialFormFields.map((field) => (
